@@ -15,12 +15,12 @@
       <img src="./assets/images/logo.png" alt="logo" width="80px">
       <ul>
         <li>
-          <a href="#">
+          <a id="inventory" href="#">
             <i class="fas fa-box-open"></i>
           </a>
         </li>
         <li>
-          <a href="#">
+          <a id="visity" href="#">
             <i class="fas fa-clipboard"></i>
           </a>
         </li>
@@ -36,36 +36,126 @@
       <div class="search-insert">
         <i id="search-icon" class="fas fa-search"></i>
         <input type="search" id="search" placeholder="Procurar item no estoque">
-        <button>Add Item</button>
+        <button type="button" id="add-button"><i class="fas fa-plus-square"></i> Add Item</button>
       </div>
+
+      <form id="form">
+        
+        <div class="form-field">
+          <label for="date">Data:</label>
+          <input type="date" id="date">
+        </div>
+    
+        <div class="form-field">
+          <label for="name">Nome:</label>
+          <input type="text" id="name">
+        </div>
+    
+        <div class="form-field">
+          <label for="quantity">Quantidade:</label>
+          <input type="number" id="quantity">
+        </div>
+    
+        <div class="form-field">
+          <label for="price">Preço uni:</label>
+          <input type="number" id="price">
+        </div>
+    
+       <div class="form-buttons">
+        <button id="add-button-form" type="submit">Adicionar</button>
+        <button id="cancel-button-form" type="submit">Cancelar</button>
+       </div>
+    
+      </form>
   
       <table>
         <thead>
-          <th>Name</th>
           <th>Data</th>
-          <th>Preço</th>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Quantidade</th>
+          <th>Preço uni</th>
+          <th>Preço total</th>
+          <th>Ações</th>
         </thead>
-        <tbody>
+        <tbody class="itens-list">
           <tr>
-            <td>Exemplo</td>
-            <td>Exemplo</td>
-            <td>Exemplo</td>
+            <td>05/04/21</td>
+            <td>01</td>
+            <td>Parafuso</td>
+            <td>75</td>
+            <td>R$ 15,50</td>
+            <td>R$ 2.390,00</td>
+            <td>
+              <button id="edit"><i class="fas fa-pencil-alt"></i></button>
+              <button id="trash"><i class="fas fa-trash"></i></button>
+            </td>
           </tr>
           <tr>
-            <td>Exemplo</td>
-            <td>Exemplo</td>
-            <td>Exemplo</td>
+            <td>05/04/21</td>
+            <td>01</td>
+            <td>Parafuso</td>
+            <td>75</td>
+            <td>R$ 15,50</td>
+            <td>R$ 2.390,00</td>
+            <td>
+              <button id="edit"><i class="fas fa-pencil-alt"></i></button>
+              <button id="trash"><i class="fas fa-trash"></i></button>
+            </td>
           </tr>
           <tr>
-            <td>Exemplo</td>
-            <td>Exemplo</td>
-            <td>Exemplo</td>
+            <td>05/04/21</td>
+            <td>01</td>
+            <td>Parafuso</td>
+            <td>75</td>
+            <td>R$ 15,50</td>
+            <td>R$ 2.390,00</td>
+            <td>
+              <button id="edit"><i class="fas fa-pencil-alt"></i></button>
+              <button id="trash"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>05/04/21</td>
+            <td>01</td>
+            <td>Parafuso</td>
+            <td>75</td>
+            <td>R$ 15,50</td>
+            <td>R$ 2.390,00</td>
+            <td>
+              <button id="edit"><i class="fas fa-pencil-alt"></i></button>
+              <button id="trash"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>05/04/21</td>
+            <td>01</td>
+            <td>Parafuso</td>
+            <td>75</td>
+            <td>R$ 15,50</td>
+            <td>R$ 2.390,00</td>
+            <td>
+              <button id="edit"><i class="fas fa-pencil-alt"></i></button>
+              <button id="trash"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td>05/04/21</td>
+            <td>01</td>
+            <td>Parafuso</td>
+            <td>75</td>
+            <td>R$ 15,50</td>
+            <td>R$ 2.390,00</td>
+            <td>
+              <button id="edit"><i class="fas fa-pencil-alt"></i></button>
+              <button id="trash"><i class="fas fa-trash"></i></button>
+            </td>
           </tr>
         </tbody>
       </table>
   
       <div class="previous-next">
-        <p></p>
+        <p>4 of 4</p>
         <button>
           <i class="fas fa-chevron-left"></i>
         </button>
@@ -78,6 +168,6 @@
 
   </div>
 
-  <src src="app.js"></src>
+  <script src="app.js"></script>
 </body>
 </html>
