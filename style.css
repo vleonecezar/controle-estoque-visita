@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Blinker&display=swap');
+
 * {
   box-sizing: border-box;
   list-style: none;
@@ -7,7 +9,8 @@
 }
 
 body {
-  background-color: rgb(231, 248, 255);
+  background-color: rgba(0, 179, 255, 0.068);
+  font-family: 'Blinker', sans-serif;
   display: flex;
   justify-content: center;
 }
@@ -15,10 +18,20 @@ body {
 .main-container {
   background-color: #fff;
   display: flex;
-  min-height: 700px;
-  min-width: 1100px;
   margin: 50px 0;
-  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.137);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.container {
+  background-color: rgba(0, 0, 0, 0.041);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 570px;
 }
 
 .menu {
@@ -26,16 +39,18 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  box-shadow: 5px 0 1px -5px #000;
+  border-right: 1px solid rgba(0, 0, 0, 0.151);
 }
 
 .menu img {
-  margin: 10px 0 50px -5px;
+  margin: 10px 0 30px -5px;
 }
 
 .menu li {
   font-size: 130%;
-  margin: 30px 0;
+  margin: 20px 0;
+  padding: 10px 24px;
+  /* border-left: 3px solid rgb(87, 179, 255); */
 }
 
 .menu i {
@@ -43,50 +58,162 @@ body {
 }
 
 header {
-  box-shadow: 0 5px 1px -5px #000;
-  padding: 25px 0 20px 30px;
-  min-width: 1100px;
-  font-size: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.151);
+  padding: 25px 0 20px 50px;
+  font-size: 18px;
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.644);
+  border-top-right-radius: 20px;
 }
 
 .search-insert {
   display: flex;
   justify-content: space-between;
-  margin: 30px 0  0 70px;
+  margin: 35px 0  0 70px;
 }
 
 #search-icon {
   position: absolute;
   font-size: 14px;
-  margin: 5px 0 0 5px;
+  margin: 8px 0 0 5px;
   color: rgba(0, 0, 0, 0.384);
+  padding-top: 3px;
 }
 
 .search-insert input {
   border-radius: 5px;
-  height: 25px;
-  width: 450px;
   padding-left: 25px;
   border-color: rgba(0, 0, 0, 0.384);
+  width: 400px;
 }
 
 .search-insert button {
+  height: 35px;
+  width: 90px;
   margin-right: 100px;
+  border-radius: 5px;
+  background-color: rgb(87, 179, 255);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.search-insert button i {
+  font-size: 17px;
+  margin-right: 3px;
+}
+
+form {
+  position: fixed;
+  left: 35%;
+  top: 30%;
+  background-color: #fff;
+  border: 1px solid black;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 350px;
+  padding: 20px 0;
+  display: none;
+}
+
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0;
+}
+
+.form-buttons {
+  margin: 20px 0 0 0;
+}
+
+.form-buttons button {
+  background-color: rgb(87, 179, 255);
+  width: 80px;
+  height: 25px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+}
+
+form input {
+  width: 250px;
+  height: 23px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.445);
+  padding-left: 8px;
 }
 
 table {
-  width: 1000px;
-  margin: 20px 0  0 50px;
+  margin: 30px 50px  0 50px;
   text-align: center;
   border-collapse: collapse;
+  max-width: 1020px;
+}
+
+tbody {
+  font-size: 14px;
+  background-color: #fff;
+}
+
+tbody button {
+  border: none;
+  border-radius: 3px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  outline: none;
+}
+
+#edit {
+  background-color: rgba(87, 179, 255, 0.26);
+  color: rgb(30, 154, 255);
+}
+
+#trash{
+  background-color: rgba(255, 87, 87, 0.26);
+  color: rgb(255, 30, 30);
 }
 
 th {
-  background-color: rgb(183, 253, 253);
+  background-color: rgba(0, 0, 0, 0.11);
+  color: rgba(0, 0, 0, 0.589);
 }
 
 th, td {
   padding: 8px 0;
+}
+
+td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.11);
+}
+
+.previous-next {
+  display: flex;
+  justify-content: flex-end;
+  margin: 15px 80px;
+}
+
+.previous-next p {
+  margin-right: 10px;
+  color: rgba(0, 0, 0, 0.562);
+}
+
+.previous-next button {
+  width: 20px;
+  height: 20px;
+  margin: 0 3px;
+  background-color: #fff;
+  border: 0.1px solid rgba(0, 0, 0, 0.452);
+  border-radius: 3px;
+  cursor: pointer;
+  outline: none;
 }
 
 
