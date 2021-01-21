@@ -179,6 +179,7 @@ tbody button {
 #trash{
   background-color: rgba(255, 87, 87, 0.26);
   color: rgb(255, 30, 30);
+  margin-left: 2px;
 }
 
 th {
