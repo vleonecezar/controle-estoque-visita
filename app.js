@@ -30,19 +30,23 @@ const isUniqueID = () => {
   return id
 }
 
-const addItemIntoArray = () => {
-  event.preventDefault()
-
+const getFormInfo = () => {
   const date = document.querySelector('#date').value
+  const id =  isUniqueID()
   const name = document.querySelector('#name').value
   const quantity = document.querySelector('#quantity').value
   const price = document.querySelector('#price').value
-  const id =  isUniqueID()
   const totalPrice = quantity * price
+
+  addItemIntoArray(date, id, name, quantity, price, totalPrice)
+}
+
+const addItemIntoArray = (date, id, name, quantity, price, totalPrice) => {
+  event.preventDefault()
 
   inventoryItens.push({
     date: date, 
-    id: id, 
+    id: id,
     name: name, 
     quantity: quantity, 
     price: price, 
@@ -58,11 +62,6 @@ const removeItemIntoArray = id => {
   addItemIntoDOM()
 }
 
-const changeFormButton = () => {
-  addButtonForm.type = 'button'
-  addButtonForm.innerText = 'Salvar'
-}
-
 const addItemIntoDOM = () => {
   itensList.innerHTML = ''
 
@@ -70,13 +69,12 @@ const addItemIntoDOM = () => {
     itensList.innerHTML += `
     <tr>
       <td>${item.date}</td>
-      <td>${item.id + 1}</td>
       <td>${item.name}</td>
       <td>${item.quantity}</td>
       <td>R$ ${item.price}</td>
       <td>R$ ${item.totalprice}</td>
       <td>
-        <button id="edit" onClick="editItemIntoArray(${item.id})">
+        <button id="edit" onClick="edit(${item.id})">
           <i class="fas fa-pencil-alt"></i>
         </button>
         <button id="trash" onClick="removeItemIntoArray(${item.id})">
@@ -93,4 +91,4 @@ const addItemIntoDOM = () => {
 
 addButton.addEventListener('click', showFormOnClick)
 cancelButtonForm.addEventListener('click', closeFormOnClick)
-form.addEventListener('submit', addItemIntoArray)
+form.addEventListener('submit', getFormInfo)
