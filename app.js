@@ -1,71 +1,59 @@
-const inventaryIcon = document.querySelector('#inventory')
-const visitIcon = document.querySelector('#visit')
-const search = document.querySelector('#search')
-const addButton = document.querySelector('#add-button')
+const addItemButton = document.querySelector('#add-button')
 const form = document.querySelector('#form')
-const addButtonForm = document.querySelector('#add-button-form')
-
-
-
 const cancelButtonForm = document.querySelector('#cancel-button-form')
-const itensList = document.querySelector('.itens-list')
-const editButton = document.querySelector('#edit')
-const trashButton = document.querySelector('#trash')
-const previousButton = document.querySelector('#previous')
-const nextButton = document.querySelector('#next')
+const inventoryOptions = document.querySelector('#inventory-options')
+const itensList = document.querySelector('#itens-list')
+const actionsTh = document.querySelector('#actions')
 
-let inventoryItens = []
+const fillCurrentInventory = () => {
+  const names = outputInventory.map(item => item.name)
 
-
-const showFormOnClick = () => form.style.display = 'inherit'
-const closeFormOnClick = () => form.style.display = 'none'
-
-const generateId = () => Math.round(Math.random() * inventoryItens.length)
-const isUniqueID = () => {
-  const inventoryIds = inventoryItens.map(item => item.id)
-  let id = generateId()
-  while ( inventoryIds.includes(id) ) {
-    id = generateId()
-  }
-  return id
+  let setCurrentArray = inputInventory.filter(item => !names.includes(item.name))
+  return setCurrentArray
 }
 
-const getFormInfo = () => {
+let inputInventory = []
+let outputInventory = []
+
+
+const openForm = () => form.style.display = 'inherit'
+const closeForm = () => form.style.display = 'none'
+
+const addItensIntoArray = inventory => {
   const date = document.querySelector('#date').value
-  const id =  isUniqueID()
   const name = document.querySelector('#name').value
   const quantity = document.querySelector('#quantity').value
   const price = document.querySelector('#price').value
+  
+  const id = isUniqueID()
   const totalPrice = quantity * price
-
-  addItemIntoArray(date, id, name, quantity, price, totalPrice)
+  
+  inventory.push(
+    {
+      id: id,
+      date: date,
+      name: name,
+      quantity: quantity,
+      price: price,
+      totalprice: totalPrice
+    }
+  )
 }
 
-const addItemIntoArray = (date, id, name, quantity, price, totalPrice) => {
-  event.preventDefault()
+const generetedID = () => Math.round(Math.random() * inputInventory.length)
 
-  inventoryItens.push({
-    date: date, 
-    id: id,
-    name: name, 
-    quantity: quantity, 
-    price: price, 
-    totalprice: totalPrice
-  })
-
-  addItemIntoDOM()
+const isUniqueID = () => {
+  const inventoryIds = inputInventory.map(item => item.id)
+  let uniqueId = generetedID()
+  while (inventoryIds.includes(uniqueId))
+    uniqueId = generetedID()
+  return uniqueId
 }
 
-const removeItemIntoArray = id => {
-  inventoryItens = inventoryItens.filter(item => item.id != id)
-
-  addItemIntoDOM()
-}
-
-const addItemIntoDOM = () => {
+const addItemIntoDOM = inventory => {
   itensList.innerHTML = ''
 
-  inventoryItens.forEach(item => {
+  inventory.forEach(item => {
     itensList.innerHTML += `
     <tr>
       <td>${item.date}</td>
@@ -73,22 +61,69 @@ const addItemIntoDOM = () => {
       <td>${item.quantity}</td>
       <td>R$ ${item.price}</td>
       <td>R$ ${item.totalprice}</td>
+      ${isHiddenButtons()}
+    </tr>
+  `
+  })
+}
+
+const isHiddenButtons = () => {
+  const choosenOption = inventoryOptions.options[inventoryOptions.selectedIndex].value
+  let content
+
+  if (choosenOption === 'current')
+    content = ''
+  else
+    content = `
       <td>
-        <button id="edit" onClick="edit(${item.id})">
+        <button id="edit">
           <i class="fas fa-pencil-alt"></i>
         </button>
-        <button id="trash" onClick="removeItemIntoArray(${item.id})">
+        <button id="trash">
           <i class="fas fa-trash"></i>
         </button>
       </td>
-    </tr>
     `
-  })
-
-  form.style.display = 'none'
+  return content
 }
 
+const mainOperations = operation => {
+  const choosenOption = inventoryOptions.options[inventoryOptions.selectedIndex].value
+  
+  switch (choosenOption) {
+    case 'current':
+      addItemIntoDOM(fillCurrentInventory())
+      break;
 
-addButton.addEventListener('click', showFormOnClick)
-cancelButtonForm.addEventListener('click', closeFormOnClick)
-form.addEventListener('submit', getFormInfo)
+    case 'input':
+      operation(inputInventory)
+      break;
+
+    case 'output':
+      operation(outputInventory)
+      break;
+  
+    default:
+      break;
+  }
+}
+
+const handleFormSubmit = () => {
+  event.preventDefault()
+
+  mainOperations(addItensIntoArray)
+  mainOperations(addItemIntoDOM)
+
+  closeForm()
+}
+
+const handleDOMInformation = () => {
+  mainOperations(addItemIntoDOM)
+}
+
+mainOperations(addItemIntoDOM)
+
+addItemButton.addEventListener('click', openForm)
+form.addEventListener('submit', handleFormSubmit)
+inventoryOptions.addEventListener('change', handleDOMInformation)
+cancelButtonForm.addEventListener('click', closeForm)
