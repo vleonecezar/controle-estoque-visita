@@ -12,7 +12,9 @@
   <div class="main-container">
 
     <aside class="menu">
+
       <img src="./assets/images/logo.png" alt="logo" width="80px">
+
       <ul>
         <li  id="inventory">
           <a href="#">
@@ -25,6 +27,7 @@
           </a>
         </li>
       </ul>
+
     </aside>
   
     <div class="container">
@@ -34,9 +37,22 @@
       </header>
   
       <div class="search-insert">
-        <i id="search-icon" class="fas fa-search"></i>
-        <input type="search" id="search" placeholder="Procurar item no estoque">
+        
+        <div class="input-container">
+
+          <i id="search-icon" class="fas fa-search"></i>
+          <input type="search" id="search" placeholder="Procurar item no estoque">  
+
+          <select id="inventory-options">
+            <option value="current">Atual</option>
+            <option value="input">Entrada</option>
+            <option value="output">Saída</option>
+          </select>
+
+        </div>
+
         <button type="button" id="add-button"><i class="fas fa-plus-square"></i> Add Item</button>
+
       </div>
 
       <form id="form">
@@ -69,20 +85,26 @@
       </form>
   
       <table>
+
         <thead>
           <th>Data</th>
           <th>Nome</th>
           <th>Quantidade</th>
           <th>Preço uni</th>
           <th>Preço total</th>
-          <th>Ações</th>
+          <th id="actions">Ações</th>
         </thead>
-        <tbody class="itens-list">
+
+        <tbody id="itens-list">
+
+          
           
         </tbody>
+
       </table>
   
       <div class="previous-next">
+
         <p>4 of 4</p>
         <button>
           <i id="previous" class="fas fa-chevron-left"></i>
@@ -90,6 +112,7 @@
         <button>
           <i id="next" class="fas fa-chevron-right"></i>
         </button>
+        
       </div>
   
     </div>
