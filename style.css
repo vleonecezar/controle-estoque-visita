@@ -86,25 +86,21 @@ header {
   display: flex;
 }
 
-#inventory-options {
-  border: 2px solid rgba(0, 0, 0, 0.384);
-  border-radius: 5px;
-  outline: none;
-  margin-left: 10px;
-  font-family: 'Blinker', sans-serif;
-  font-size: 14px;
-}
-
 .search-insert button {
   height: 35px;
-  width: 90px;
+  width: 120px;
   border-radius: 5px;
-  background-color: rgb(87, 179, 255);
+  background-color:rgba(255, 30, 30, 0.795);
   color: #fff;
   border: none;
   cursor: pointer;
   outline: none;
   margin-right: 100px;
+}
+
+.search-insert button:first-child {
+  background-color: rgb(87, 179, 255);
+  margin-right: 40px;
 }
 
 .search-insert button i {
