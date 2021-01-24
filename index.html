@@ -47,38 +47,64 @@
 
         <div>
 
-          <button type="button" id="add-button"><i class="fas fa-plus-square"></i> Adicionar Item</button>
-          <button type="button" id="withdraw-button"><i class="fas fa-minus-square"></i> Retirar Item</button>
+          <button type="button" id="register-button"><i class="fas fa-plus-square"></i> Adicionar Item</button>
+          <button type="button" id="operation-button"><i class="fas fa-minus-square"></i> Retirar Item</button>
           
         </div>
 
       </div>
 
-      <form id="form">
-        
-        <div class="form-field">
-          <label for="date">Data:</label>
-          <input type="date" id="date">
-        </div>
+      <form id="register-form">
+
+        <h2 id="form-title">Registro</h2>
     
         <div class="form-field">
           <label for="name">Nome:</label>
           <input type="text" id="name">
         </div>
     
+       <div class="form-buttons">
+        <button id="add-register-button" type="submit">Adicionar</button>
+        <button id="cancel-register-button" type="button">Cancelar</button>
+       </div>
+    
+      </form>
+
+      <form id="operation-form">
+
+        <h2 id="form-title">Operação</h2>
+
+        <div id="operation-field" class="form-field">
+          
+          <label for="operations">Escolha a operação:</label>
+          <select name="operations" id="operations">
+          <option value="add">Adicionar</option>
+          <option value="withdraw">Retirar</option>
+          </select>
+
+        </div>
+
         <div class="form-field">
+          
+          <label for="operation-item-name">Nome:</label>
+          <select name="operation" id="operation-item-name">
+          </select>
+
+        </div>
+    
+        <div id="quantity-field" class="form-field">
           <label for="quantity">Quantidade:</label>
           <input type="number" id="quantity">
         </div>
     
-        <div class="form-field">
-          <label for="price">Preço uni:</label>
+        <div id="price-field" class="form-field">
+          <label for="price">Preço unitário:</label>
           <input type="number" id="price">
         </div>
     
        <div class="form-buttons">
-        <button id="add-button-form" type="submit">Adicionar</button>
-        <button id="cancel-button-form" type="button">Cancelar</button>
+        <button id="add-operation-button" type="submit">Adicionar</button>
+        <button id="cancel-operation-button" type="button">Cancelar</button>
        </div>
     
       </form>
@@ -86,17 +112,16 @@
       <table>
 
         <thead>
-          <th>Data</th>
+          <th>Entrada</th>
+          <th>Ultima Alteração</th>
           <th>Nome</th>
           <th>Quantidade</th>
-          <th>Preço uni</th>
-          <th>Preço total</th>
+          <th>Valor em Estoque</th>
           <th id="actions">Ações</th>
         </thead>
 
         <tbody id="itens-list">
 
-          
           
         </tbody>
 
