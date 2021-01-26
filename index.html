@@ -47,8 +47,8 @@
 
         <div>
 
-          <button type="button" id="register-button"><i class="fas fa-plus-square"></i> Adicionar Item</button>
-          <button type="button" id="operation-button"><i class="fas fa-minus-square"></i> Retirar Item</button>
+          <button type="button" id="register-button"><i class="fas fa-plus-square"></i> Registrar</button>
+          <button type="button" id="operation-button"><i class="fas fa-tasks"></i> Gerenciar</button>
           
         </div>
 
@@ -62,9 +62,14 @@
           <label for="name">Nome:</label>
           <input type="text" id="name">
         </div>
+
+        <div id="price-field" class="form-field">
+          <label for="price">Preço unitário:</label>
+          <input type="number" id="price" step="0.01" min="0.01" required>
+        </div>
     
        <div class="form-buttons">
-        <button id="add-register-button" type="submit">Adicionar</button>
+        <button id="add-register-button" type="submit">Registrar</button>
         <button id="cancel-register-button" type="button">Cancelar</button>
        </div>
     
@@ -97,13 +102,8 @@
           <input type="number" id="quantity">
         </div>
     
-        <div id="price-field" class="form-field">
-          <label for="price">Preço unitário:</label>
-          <input type="number" id="price">
-        </div>
-    
        <div class="form-buttons">
-        <button id="add-operation-button" type="submit">Adicionar</button>
+        <button id="add-operation-button" type="submit">Salvar</button>
         <button id="cancel-operation-button" type="button">Cancelar</button>
        </div>
     
@@ -116,7 +116,8 @@
           <th>Ultima Alteração</th>
           <th>Nome</th>
           <th>Quantidade</th>
-          <th>Valor em Estoque</th>
+          <th>Preço Unitário</th>
+          <th>Preço Total</th>
           <th id="actions">Ações</th>
         </thead>
 
@@ -129,11 +130,11 @@
   
       <div class="previous-next">
 
-        <p>4 of 4</p>
-        <button>
+        <p id="page-number"></p>
+        <button type="button">
           <i id="previous" class="fas fa-chevron-left"></i>
         </button>
-        <button>
+        <button type="button">
           <i id="next" class="fas fa-chevron-right"></i>
         </button>
         
