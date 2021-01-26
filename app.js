@@ -22,10 +22,10 @@ let b = 3
 const handlePage = e => {
   
   
-  if (e.target.id === 'previous' && a > 0) {
+  if (e.target.id === 'previous' && b > 3) {
     a -= 3
     b -= 3
-  } else if (e.target.id === 'next' && a < 1) {
+  } else if (e.target.id === 'next' && b < inventory.length) {
     a += 3
     b += 3
   }
@@ -175,8 +175,6 @@ const handleOperationFormSubmit = () => {
 
 const removeItemIntoDOM = id => {
   inventory = inventory.filter(item => item.id != id)
-
-  //addInventoryIntoDOM(inventory)
   verifySearchFieldAndAddItensIntoDOM()
 }
 
