@@ -80,6 +80,11 @@ header {
   padding-left: 25px;
   width: 300px;
   font-family: 'Blinker', sans-serif;
+  font-size: 15px;
+}
+
+.search-insert input::-webkit-search-cancel-button {
+  display: none;
 }
 
 .input-container {
@@ -166,6 +171,10 @@ table {
 tbody {
   font-size: 16px;
   background-color: #fff;
+}
+
+#item-name, #operation-item-name {
+  text-transform: capitalize;
 }
 
 tbody button {
