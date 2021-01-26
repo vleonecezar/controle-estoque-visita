@@ -13,22 +13,26 @@ const operations = document.querySelector('#operations')
 const removeButton = document.querySelector('#trash')
 const searchInput = document.querySelector('#search')
 const pageNumber = document.querySelector('#page-number')
+const inputName = document.querySelector('#name')
 
 let inventory = []
 
 let a = 0
 let b = 3
+let page = 1
+let page2 = 1
 
 const handlePage = e => {
-  
   
   if (e.target.id === 'previous' && b > 3) {
     a -= 3
     b -= 3
+    page -= 1
   } else if (e.target.id === 'next' && b < inventory.length) {
     a += 3
     b += 3
-  }
+    page += 1
+  } 
   console.log(a, b)
 
   verifySearchFieldAndAddItensIntoDOM()
@@ -44,7 +48,10 @@ const getDate = () => {
 }
 
 
-const openRegisterForm = () => registerForm.style.display = 'inherit'
+const openRegisterForm = () => {
+  registerForm.style.display = 'inherit'
+  inputName.focus()
+}
 const closeRegisterForm = () => registerForm.style.display = 'none'
 const openOperationForm = () => {
   fillNamesOptions()
@@ -78,7 +85,7 @@ const FormatCurrency = price => {
 const addInventoryIntoDOM = inventory => {
   itensList.innerHTML = ''
   
-  inventory.slice(a, b).forEach(item => {
+  inventory.forEach(item => {
     itensList.innerHTML += `
       <tr id='${item.id}'>
         <td>${item.date}</td>
@@ -95,7 +102,7 @@ const addInventoryIntoDOM = inventory => {
       </tr>
     `
   })
-
+  pageNumber.innerText = `${page} de ${page2}`
 }
 
 const addItem = () => {
@@ -115,7 +122,7 @@ const addItem = () => {
     price: price,
     totalPrice: 0
   })
-  
+  page2 = Math.round((inventory.length + 0.5) / 3)
   verifySearchFieldAndAddItensIntoDOM()
   closeRegisterForm()
 }
@@ -174,8 +181,20 @@ const handleOperationFormSubmit = () => {
 }
 
 const removeItemIntoDOM = id => {
-  inventory = inventory.filter(item => item.id != id)
-  verifySearchFieldAndAddItensIntoDOM()
+  let choosenAnswer = confirm('TEM CERTEZA QUE DESEJA DELETAR ?')
+  if (choosenAnswer === true) {
+    inventory = inventory.filter(item => item.id != id)
+    
+    page2 = Math.round((inventory.length + 0.5) / 3)
+
+    if (page > page2) {
+      page -= 1
+      a -= 3
+      b -= 3
+    }
+
+    verifySearchFieldAndAddItensIntoDOM()
+  }
 }
 
 const verifySearchFieldAndAddItensIntoDOM = () => {
@@ -183,10 +202,16 @@ const verifySearchFieldAndAddItensIntoDOM = () => {
   const filteredItens = inventory.filter(item => item.name.includes(wantedItem))
 
   if (wantedItem === '') {
-    addInventoryIntoDOM(inventory)
+    addInventoryIntoDOM(inventory.slice(a, b))
   } else {
     addInventoryIntoDOM(filteredItens)
   }
+}
+
+const cleanSearchInput = () => {
+  searchInput.value = ''
+
+  verifySearchFieldAndAddItensIntoDOM()
 }
 
 verifySearchFieldAndAddItensIntoDOM()
@@ -199,5 +224,6 @@ registerForm.addEventListener('submit', handleRegisterFormSubmit)
 operationForm.addEventListener('submit', handleOperationFormSubmit)
 operations.addEventListener('change', isPriceHidden)
 searchInput.addEventListener('keyup', verifySearchFieldAndAddItensIntoDOM)
+searchInput.addEventListener('blur', cleanSearchInput)
 previousButton.addEventListener('click', handlePage)
 nextButton.addEventListener('click', handlePage)
