@@ -2,14 +2,37 @@ const registerButton = document.querySelector('#register-button')
 const cancelRegisterButton = document.querySelector('#cancel-register-button')
 const operationButton = document.querySelector('#operation-button')
 const cancelOperationButton = document.querySelector('#cancel-operation-button')
+const previousButton = document.querySelector('#previous')
+const nextButton = document.querySelector('#next')
+
 
 const registerForm = document.querySelector('#register-form')
 const operationForm = document.querySelector('#operation-form')
 const itensList = document.querySelector('#itens-list')
 const operations = document.querySelector('#operations')
 const removeButton = document.querySelector('#trash')
+const searchInput = document.querySelector('#search')
+const pageNumber = document.querySelector('#page-number')
 
 let inventory = []
+
+let a = 0
+let b = 3
+
+const handlePage = e => {
+  
+  
+  if (e.target.id === 'previous' && a > 0) {
+    a -= 3
+    b -= 3
+  } else if (e.target.id === 'next' && a < 1) {
+    a += 3
+    b += 3
+  }
+  console.log(a, b)
+
+  verifySearchFieldAndAddItensIntoDOM()
+}
 
 const getDate = () => {
   const date = new Date()
@@ -48,17 +71,22 @@ const handleRegisterFormSubmit = () => {
   addItem()
 }
 
-const addInventoryIntoDOM = () => {
-  itensList.innerHTML = ''
+const FormatCurrency = price => {
+  return Number(price).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
+}
 
-  inventory.forEach(item => {
+const addInventoryIntoDOM = inventory => {
+  itensList.innerHTML = ''
+  
+  inventory.slice(a, b).forEach(item => {
     itensList.innerHTML += `
       <tr id='${item.id}'>
         <td>${item.date}</td>
         <td>${item.modDate}</td>
-        <td>${item.name}</td>
+        <td id="item-name">${item.name}</td>
         <td>${item.quantity}</td>
-        <td>${item.inventoryValue}</td>
+        <td>${FormatCurrency(item.price)}</td>
+        <td>${FormatCurrency(item.totalPrice)}</td>
         <td>
           <button id="trash" type="button" onClick="removeItemIntoDOM(${item.id})">
             <i class="fas fa-trash"></i>
@@ -66,18 +94,17 @@ const addInventoryIntoDOM = () => {
         </td>
       </tr>
     `
-    console.log(item.inventoryValue)
   })
+
 }
 
 const addItem = () => {
   const id = isUniqueID()
-  const date = '05/05/05'
-  const name = document.querySelector('#name').value
+  const date = getDate()
+  const name = document.querySelector('#name').value.toLowerCase()
   const quantity = Number(document.querySelector('#quantity').value)
   const price = document.querySelector('#price').value
-  const inventoryValue = quantity * price
-  console.log(quantity, inventoryValue)
+  const totalPrice = quantity * price
 
   inventory.push({
     id: id,
@@ -85,10 +112,11 @@ const addItem = () => {
     modDate: date,
     name: name,
     quantity: 0,
-    inventoryValue: 0
+    price: price,
+    totalPrice: 0
   })
-
-  addInventoryIntoDOM()
+  
+  verifySearchFieldAndAddItensIntoDOM()
   closeRegisterForm()
 }
 
@@ -98,7 +126,7 @@ const fillNamesOptions = () => {
 
   inventory.forEach(item => {
     itensNames.innerHTML += `
-      <option value="${item.name}">${item.name}</option>
+      <option id="option-name" value="${item.name}">${item.name}</option>
     `
   })
 }
@@ -129,11 +157,7 @@ const handleOperationFormSubmit = () => {
       if (item.name === name) {
         item.modDate = date
         item.quantity += quantity
-        Number(item.price += price)
-        item.inventoryValue += price * quantity
-        console.log(item.price, price)
-      } else {
-        alert('erro')
+        item.totalPrice += item.price * quantity
       }
     })
   } else {
@@ -141,26 +165,33 @@ const handleOperationFormSubmit = () => {
       if (item.name === name) {
         item.modDate = date
         item.quantity -= quantity
-        Number(item.price -= price)
-        item.inventoryValue -= price * quantity
-        console.log(item.price, price)
-      } else {
-        alert('erro')
+        item.totalPrice -= item.price * quantity
       }
     })
   }
-  addInventoryIntoDOM()
+  verifySearchFieldAndAddItensIntoDOM()
   closeOperationForm()
 }
 
 const removeItemIntoDOM = id => {
   inventory = inventory.filter(item => item.id != id)
 
-  addInventoryIntoDOM()
+  //addInventoryIntoDOM(inventory)
+  verifySearchFieldAndAddItensIntoDOM()
 }
 
+const verifySearchFieldAndAddItensIntoDOM = () => {
+  const wantedItem = searchInput.value.toLowerCase()
+  const filteredItens = inventory.filter(item => item.name.includes(wantedItem))
 
-addInventoryIntoDOM()
+  if (wantedItem === '') {
+    addInventoryIntoDOM(inventory)
+  } else {
+    addInventoryIntoDOM(filteredItens)
+  }
+}
+
+verifySearchFieldAndAddItensIntoDOM()
 
 registerButton.addEventListener('click', openRegisterForm)
 cancelRegisterButton.addEventListener('click', closeRegisterForm)
@@ -169,3 +200,6 @@ cancelOperationButton.addEventListener('click', closeOperationForm)
 registerForm.addEventListener('submit', handleRegisterFormSubmit)
 operationForm.addEventListener('submit', handleOperationFormSubmit)
 operations.addEventListener('change', isPriceHidden)
+searchInput.addEventListener('keyup', verifySearchFieldAndAddItensIntoDOM)
+previousButton.addEventListener('click', handlePage)
+nextButton.addEventListener('click', handlePage)
