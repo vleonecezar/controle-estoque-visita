@@ -191,7 +191,13 @@ const removeItemIntoDOM = id => {
       page -= 1
       a -= 3
       b -= 3
-    }
+      if (page === 0) {
+        page = 1
+        page2 = 1
+        a = 0
+        b = 3 
+      }
+    } 
 
     verifySearchFieldAndAddItensIntoDOM()
   }
