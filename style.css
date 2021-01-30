@@ -155,6 +155,14 @@ form {
   outline: none;
 }
 
+#add {
+  color: green;
+}
+
+#withdraw {
+  color: red;
+}
+
 form input, select {
   width: 250px;
   height: 23px;
@@ -175,6 +183,10 @@ tbody {
 
 #item-name, #operation-item-name {
   text-transform: capitalize;
+}
+
+#operations {
+  color: green;
 }
 
 tbody button {
