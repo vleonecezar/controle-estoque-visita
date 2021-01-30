@@ -83,8 +83,8 @@
           
           <label for="operations">Escolha a operação:</label>
           <select name="operations" id="operations">
-          <option value="add">Adicionar</option>
-          <option value="withdraw">Retirar</option>
+          <option id="add" value="add">Adicionar</option>
+          <option id="withdraw" value="withdraw">Retirar</option>
           </select>
 
         </div>
@@ -131,12 +131,9 @@
       <div class="previous-next">
 
         <p id="page-number"></p>
-        <button type="button">
-          <i id="previous" class="fas fa-chevron-left"></i>
-        </button>
-        <button type="button">
-          <i id="next" class="fas fa-chevron-right"></i>
-        </button>
+
+        <button type="button" class="fas fa-chevron-left" id="previous"></button>
+        <button type="button" class="fas fa-chevron-right" id="next"></button>
         
       </div>
   
