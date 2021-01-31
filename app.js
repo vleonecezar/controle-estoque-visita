@@ -30,12 +30,12 @@ const updateLocalStorege = () => {
 
 const setPageQuantity = () => Math.round( ( inventory.length + 0.5 ) / 3 )
 
-const handlePageNumberIntoDOM = () => {
+const displayPageNumbers = () => {
   const pageNumber = document.querySelector( '#page-number' )
   pageNumber.innerText = `${ currentPage } de ${ pageQuantity }`
 }
 
-const handlePageNumberOnRemoveItem = () => {
+const handlePageNumberWhenRemovingItem = () => {
   if ( currentPage > pageQuantity ) {
     currentPage -= 1
     firstArrayItem -= 3
@@ -52,12 +52,18 @@ const handlePageNumberOnRemoveItem = () => {
   init()
 }
 
-const handlePageNumberOnClick = e => {
-  if ( e.target.id === 'previous' && arrayLimiter > 3 ) {
+const handlePageNumberWhenClicking = e => {
+  const eventID = e.target.id
+  const greater = arrayLimiter > 3
+  const less = arrayLimiter < inventory.length
+  const previous = eventID === 'previous' && greater
+  const next = eventID === 'next' && less
+
+  if ( previous ) {
     firstArrayItem -= 3
     arrayLimiter -= 3
     currentPage -= 1
-  } else if ( e.target.id === 'next' && arrayLimiter < inventory.length ) {
+  } else if ( next ) {
     firstArrayItem += 3
     arrayLimiter += 3
     currentPage += 1
@@ -68,19 +74,20 @@ const handlePageNumberOnClick = e => {
 
 // ----- SEARCH -----
 
-const getSearchedItems = name => {
+const getSearchedItem = name => {
   const filteredItens = inventory.filter( item => item.name.includes( name ) )
   return filteredItens
 }
 
-const verifySearchFieldAndAddItemsIntoDOM = () => {
-
-  const wantedItem = searchInput.value.toLowerCase()
+const verifySearchFieldAndDisplayItems = () => {
+  const searchedItem = searchInput.value.toLowerCase()
+  const notSearching = inventory.slice( firstArrayItem, arrayLimiter )
+  const searching = getSearchedItem( searchedItem )
   
-  if ( wantedItem === '' ) {
-    addInventoryIntoDOM( inventory.slice( firstArrayItem, arrayLimiter ) )
+  if ( searchedItem === '' ) {
+    displayListIntoDOM( notSearching )
   } else {
-    addInventoryIntoDOM( getSearchedItems( wantedItem ) )
+    displayListIntoDOM( searching )
   }
 }
 
@@ -89,14 +96,14 @@ const cleanSearchInput = () => {
   init()
 }
 
-// ----- LIST INTO DOM -----
+// ----- DISPLAY LIST INTO DOM -----
 
-const addInventoryIntoDOM = inventory => {
-  const itensList = document.querySelector( '#itens-list' )
-  itensList.innerHTML = ''
+const displayListIntoDOM = inventory => {
+  const itemsList = document.querySelector( '#itens-list' )
+  itemsList.innerHTML = ''
   
   inventory.forEach ( item => {
-    itensList.innerHTML += `
+    itemsList.innerHTML += `
       <tr id='${ item.id }'>
         <td>${ item.date }</td>
         <td>${ item.modDate }</td>
@@ -115,30 +122,30 @@ const addInventoryIntoDOM = inventory => {
 }
 
 const removeItemIntoDOM = id => {
-  const choosenAnswer = confirm( 'TEM CERTEZA QUE DESEJA DELETAR?' )
+  const response = confirm( 'TEM CERTEZA QUE DESEJA DELETAR?' )
 
-  if ( choosenAnswer === true ) {
+  if ( response === true ) {
     inventory = inventory.filter( item => item.id != id )
     pageQuantity = setPageQuantity() 
   }
 
-  handlePageNumberOnRemoveItem()
+  handlePageNumberWhenRemovingItem()
 }
 
 // ----- REGISTER FORM -----
 
-const openRegisterForm = e => {
+const openRegisterForm = event => {
   const inputName = document.querySelector( '#name' )
+  const formID = event.target.id
 
-  //cleanForms(e.target.id)
+  //cleanForms(formID)
   registerForm.style.display = 'inherit'
   inputName.focus()
 }
 
 const closeRegisterForm = () => registerForm.style.display = 'none'
 
-const addItem = () => {
-
+const addItemIntoArray = () => {
   const id = isUniqueID()
   const date = getDate()
   const name = document.querySelector( '#name' ).value.toLowerCase()
@@ -159,24 +166,27 @@ const addItem = () => {
 }
 
 const handleRegisterFormSubmit = () => {
-
   event.preventDefault()
 
-  addItem()
+  addItemIntoArray()
   init()
   closeRegisterForm()
 }
 
 // ----- OPERATION FORM -----
 
-const openOperationForm = e => {
+const openOperationsForm = event => {
+  const formID = event.target.id
+
   fillNamesOptions()
-  cleanForms(e.target.id)
+  cleanForms(formID)
+
   operationForm.style.display = 'inherit'
 }
 
 const closeOperationForm = () => {
   operationForm.style.display = 'none'
+
   setInitialOperationColor()
 }
 
@@ -192,46 +202,52 @@ const setInitialOperationColor = () => {
   operations.style.color = 'green'
 }
 
-const handleOperationColor = e => {
-  if ( e.target.value != 'add' ) {
+const handleOperationColor = event => {
+  const operationValue = event.target.value
+  const notAddOperation = operationValue != 'add'
+
+  if ( notAddOperation ) {
     operations.style.color = 'red'
   } 
 }
 
 const addOperation = ( name, date, quantity ) => {
+  const totalPrice = item.price * quantity
 
   inventory.forEach( item => {
     if ( item.name === name ) {
       item.modDate = date
       item.quantity += quantity
-      item.totalPrice += item.price * quantity
+      item.totalPrice += totalPrice
     }
   })
 }
 
-const isValidQuantity = item => { 
+const validQuantity = ( item, name ) => { 
   return item.name === name && 
   item.quantity > 0 && quantity <= item.quantity
 }
 
-const isInvalidQuantity = item => { 
+const notValidQuantity = ( item, name ) => { 
   return item.name === name && 
   ( item.quantity === 0 || item.quantity < quantity )
 }
 
 const withdrawOperation = ( name, date, quantity ) => {
   inventory.forEach( item => {
-    if ( isValidQuantity( item ) ) {
+
+    if ( validQuantity( item, name ) ) {
       item.modDate = date
       item.quantity -= quantity
       item.totalPrice -= item.price * quantity
-    } else if ( isInvalidQuantity( item ) ) {
+    } else if ( notValidQuantity( item, name ) ) {
       alert(`QUANTIDADE DE ${item.name.toUpperCase()} MAIOR QUE O DISPONÍVEL.`)
     }
+
   })
 }
 
-const handleOperationFormSubmit = () => {
+const handleOperationsFormSubmit = () => {
   event.preventDefault()
   
   const operation = document.querySelector( '#operations' ).value
@@ -245,19 +261,19 @@ const handleOperationFormSubmit = () => {
     withdrawOperation( name, date, quantity )
   }
 
+  emptyListAlert()
+  closeOperationForm()
   setInitialOperationColor()
   init()
-  closeOperationForm()
-  emptyListAlert()
 }
 
 const fillNamesOptions = () => {
-  const itensNames = document.querySelector( '#operation-item-name' )
-  itensNames.innerHTML = ''
+  const itemsNames = document.querySelector( '#operation-item-name' )
+  itemsNames.innerHTML = ''
 
-  inventory.forEach( item => {
-    itensNames.innerHTML += `
-      <option id="option-name" value="${ item.name }">${ item.name }</option>
+  inventory.forEach( ({ name }) => {
+    itemsNames.innerHTML += `
+      <option id="option-name" value="${ name }">${ name }</option>
     `
   })
 }
@@ -293,6 +309,7 @@ const FormatCurrency = price => {
 }
 
 const cleanForms = id => {
+
   if ( id === 'register-button' ) {
     registerForm.reset()
   } else {
@@ -303,9 +320,8 @@ const cleanForms = id => {
 // ----- INIT -----
 
 const init = () => {
-
-  verifySearchFieldAndAddItemsIntoDOM()
-  handlePageNumberIntoDOM()
+  verifySearchFieldAndDisplayItems()
+  displayPageNumbers()
   updateLocalStorege()
 }
 
@@ -315,12 +331,12 @@ init()
 
 registerButton.addEventListener('click', openRegisterForm)
 cancelRegisterButton.addEventListener('click', closeRegisterForm)
-operationButton.addEventListener('click', openOperationForm)
+operationButton.addEventListener('click', openOperationsForm)
 cancelOperationButton.addEventListener('click', closeOperationForm)
 operations.addEventListener('change', handleOperationColor)
-searchInput.addEventListener('keyup', verifySearchFieldAndAddItemsIntoDOM)
+searchInput.addEventListener('keyup', verifySearchFieldAndDisplayItems)
 searchInput.addEventListener('blur', cleanSearchInput)
 registerForm.addEventListener('submit', handleRegisterFormSubmit)
-operationForm.addEventListener('submit', handleOperationFormSubmit)
-previousButton.addEventListener('click', handlePageNumberOnClick)
-nextButton.addEventListener('click', handlePageNumberOnClick)
+operationForm.addEventListener('submit', handleOperationsFormSubmit)
+previousButton.addEventListener('click', handlePageNumberWhenClicking)
+nextButton.addEventListener('click', handlePageNumberWhenClicking)
