@@ -16,16 +16,8 @@
       <img src="./assets/images/logo.png" alt="logo" width="80px">
 
       <ul>
-        <li  id="inventory">
-          <a href="#">
-            <i class="fas fa-box-open"></i>
-          </a>
-        </li>
-        <li  id="visity">
-          <a href="#">
-            <i class="fas fa-clipboard"></i>
-          </a>
-        </li>
+        <li class="fas fa-box-open" id="menu-inventory"></li>
+        <li class="fas fa-walking" id="menu-visit"></li>
       </ul>
 
     </aside>
@@ -60,12 +52,12 @@
     
         <div class="form-field">
           <label for="name">Nome:</label>
-          <input type="text" id="name" maxlength="20" required>
+          <input required type="text" id="name" maxlength="20">
         </div>
 
         <div id="price-field" class="form-field">
           <label for="price">Preço unitário:</label>
-          <input type="number" id="price" step="0.01" min="0.01" required>
+          <input required type="number" id="price" step="0.01" min="0.01">
         </div>
     
        <div class="form-buttons">
@@ -83,8 +75,8 @@
           
           <label for="operations">Escolha a operação:</label>
           <select name="operations" id="operations">
-          <option id="add" value="add">Adicionar</option>
-          <option id="withdraw" value="withdraw">Retirar</option>
+          <option id="add" value="add">ADICIONAR</option>
+          <option id="withdraw" value="withdraw">RETIRAR</option>
           </select>
 
         </div>
@@ -99,7 +91,7 @@
     
         <div id="quantity-field" class="form-field">
           <label for="quantity">Quantidade:</label>
-          <input type="number" id="quantity" min="1" required>
+          <input required type="number" id="quantity" min="1">
         </div>
     
        <div class="form-buttons">
@@ -111,7 +103,7 @@
   
       <table>
 
-        <thead>
+        <thead id="table-head">
           <th>Entrada</th>
           <th>Ultima Alteração</th>
           <th>Nome</th>
