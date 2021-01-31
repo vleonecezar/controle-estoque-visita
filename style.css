@@ -19,15 +19,16 @@ body {
   background-color: #fff;
   display: flex;
   margin: 50px 0;
-  border: 1px solid rgba(0, 0, 0, 0.137);
+  border: 1px solid rgba(0, 0, 0, 0.199);
   border-radius: 20px;
   width: 100%;
   max-width: 1200px;
 }
 
 .container {
-  background-color: rgba(0, 0, 0, 0.041);
-  border-radius: 20px;
+  background-color: rgb(231, 231, 231);
+  border-top-right-radius: 19px;
+  border-bottom-right-radius: 19px;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -36,28 +37,36 @@ body {
 
 .menu {
   text-align: center;
-  border-right: 1px solid rgba(0, 0, 0, 0.151);
+  border-right: 1px solid rgba(0, 0, 0, 0.199);
 }
 
 .menu img {
-  margin: 10px 0 30px -5px;
+  margin: 10px 0 12px -5px;
+}
+
+.menu ul {
+  display: flex;
+  flex-direction: column;
 }
 
 .menu li {
+  cursor: pointer;
   font-size: 130%;
-  margin: 30px 0;
-  /* border-left: 3px solid rgb(87, 179, 255); */
+  padding: 20px 0;
+  color: rgb(105, 105, 105);
 }
 
-.menu i {
-  color: rgba(0, 0, 0, 0.384);
+.menu #menu-visit {
+  border-top: 1px solid rgba(0, 0, 0, 0.199);
+  font-size: 25px;
+  padding: 17.5px 0;
 }
 
 header {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.151);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.199);
   padding: 25px 0 20px 50px;
   font-size: 18px;
-  background-color: #fff;
+  background-color:rgb(255, 255, 255);
   color: rgba(0, 0, 0, 0.644);
   border-top-right-radius: 20px;
 }
@@ -227,7 +236,7 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background-color: rgba(0, 0, 0, 0.041);
+  background-color: rgba(0, 0, 0, 0.082);
 }
 
 .previous-next {
