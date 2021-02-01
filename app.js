@@ -1,6 +1,8 @@
 
 // GLOBAL VARIABLES
 
+const menuInventory = document.querySelector('#menu-inventory')
+const menuVisit = document.querySelector('#menu-visit')
 const registerButton = document.querySelector('#register-button')
 const cancelRegisterButton = document.querySelector('#cancel-register-button')
 const operationButton = document.querySelector('#operation-button')
@@ -24,6 +26,39 @@ let inventory = localStorage.getItem('inventory') != null ? localStorageInventor
 
 const updateLocalStorege = () => {
 	localStorage.setItem( 'inventory', JSON.stringify( inventory ) ) 
+}
+
+// MENU SETTINGS
+
+const setInitialMenu = () => {
+  menuInventory.style.backgroundColor = 'rgb(231, 231, 231)'
+  menuInventory.style.marginRight = '-0.5px'
+  menuInventory.style.borderTop = '1px solid rgba(0, 0, 0, 0.199)'
+}
+
+const displayInventory = event => {
+  const menuID = event.target.id
+  const itemsList = document.querySelector( '#itens-list' )
+
+  if ( menuID === 'menu-inventory' ) {
+    menuInventory.style.backgroundColor = 'rgb(231, 231, 231)'
+    menuInventory.style.marginRight = '-0.5px'
+    menuInventory.style.borderTop = '1px solid rgba(0, 0, 0, 0.199)'
+
+    menuVisit.style.backgroundColor = 'transparent'
+    menuVisit.style.marginRight = '0'
+    menuVisit.style.borderBottom = '1px solid transparent'
+
+    
+  } else {
+    menuInventory.style.backgroundColor = 'transparent'
+    menuInventory.style.marginRight = '0'
+    menuInventory.style.borderTop = '1px solid transparent'
+
+    menuVisit.style.backgroundColor = 'rgb(231, 231, 231)'
+    menuVisit.style.marginRight = '-0.5px'
+    menuVisit.style.borderBottom = '1px solid rgba(0, 0, 0, 0.199)'
+  }
 }
 
 // PAGINATION SETTINGS
@@ -208,13 +243,16 @@ const handleOperationColor = event => {
 
   if ( notAddOperation ) {
     operations.style.color = 'red'
-  } 
+  } else {
+    operations.style.color = 'green'
+  }
 }
 
 const addOperation = ( name, date, quantity ) => {
-  const totalPrice = item.price * quantity
 
   inventory.forEach( item => {
+    const totalPrice = item.price * quantity
+
     if ( item.name === name ) {
       item.modDate = date
       item.quantity += quantity
@@ -235,11 +273,12 @@ const notValidQuantity = ( item, name ) => {
 
 const withdrawOperation = ( name, date, quantity ) => {
   inventory.forEach( item => {
+    const totalPrice = item.price * quantity
 
     if ( validQuantity( item, name ) ) {
       item.modDate = date
       item.quantity -= quantity
-      item.totalPrice -= item.price * quantity
+      item.totalPrice -= totalPrice
     } else if ( notValidQuantity( item, name ) ) {
       alert(`QUANTIDADE DE ${item.name.toUpperCase()} MAIOR QUE O DISPONÍVEL.`)
     }
@@ -325,10 +364,13 @@ const init = () => {
   updateLocalStorege()
 }
 
+setInitialMenu()
 init()
 
 // EVENT LISTENERS
 
+menuInventory.addEventListener('click', displayInventory)
+menuVisit.addEventListener('click', displayInventory)
 registerButton.addEventListener('click', openRegisterForm)
 cancelRegisterButton.addEventListener('click', closeRegisterForm)
 operationButton.addEventListener('click', openOperationsForm)
