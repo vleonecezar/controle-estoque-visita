@@ -30,34 +30,25 @@ const updateLocalStorege = () => {
 
 // MENU SETTINGS
 
-const setInitialMenu = () => {
-  menuInventory.style.backgroundColor = 'rgb(231, 231, 231)'
-  menuInventory.style.marginRight = '-0.5px'
-  menuInventory.style.borderTop = '1px solid rgba(0, 0, 0, 0.199)'
+const handleMenuOptions = (display, hide) => {
+  display.style.backgroundColor = 'rgb(231, 231, 231)'
+  display.style.marginRight = '-0.5px'
+  display.style.borderTop = '1px solid rgba(0, 0, 0, 0.199)'
+  display.style.borderBottom = '1px solid rgba(0, 0, 0, 0.199)'
+
+  hide.style.backgroundColor = 'transparent'
+  hide.style.marginRight = '0'
+  hide.style.borderTop = '1px solid transparent'
+  hide.style.borderBottom = '1px solid transparent'
 }
 
-const displayInventory = event => {
-  const menuID = event.target.id
-  const itemsList = document.querySelector( '#itens-list' )
+const displayChosenMenuOption = event => {
+  const chosenOption = event.target.id
 
-  if ( menuID === 'menu-inventory' ) {
-    menuInventory.style.backgroundColor = 'rgb(231, 231, 231)'
-    menuInventory.style.marginRight = '-0.5px'
-    menuInventory.style.borderTop = '1px solid rgba(0, 0, 0, 0.199)'
-
-    menuVisit.style.backgroundColor = 'transparent'
-    menuVisit.style.marginRight = '0'
-    menuVisit.style.borderBottom = '1px solid transparent'
-
-    
+  if ( chosenOption === 'menu-inventory' ) {
+    handleMenuOptions( menuInventory, menuVisit )
   } else {
-    menuInventory.style.backgroundColor = 'transparent'
-    menuInventory.style.marginRight = '0'
-    menuInventory.style.borderTop = '1px solid transparent'
-
-    menuVisit.style.backgroundColor = 'rgb(231, 231, 231)'
-    menuVisit.style.marginRight = '-0.5px'
-    menuVisit.style.borderBottom = '1px solid rgba(0, 0, 0, 0.199)'
+    handleMenuOptions( menuVisit, menuInventory )
   }
 }
 
@@ -185,19 +176,24 @@ const addItemIntoArray = () => {
   const date = getDate()
   const name = document.querySelector( '#name' ).value.toLowerCase()
   const price = document.querySelector( '#price' ).value
+  const isNameUsed = inventory.find(item => item.name === name)
 
-  inventory.push({
-    id: id,
-    date: date,
-    modDate: date,
-    name: name,
-    quantity: 0,
-    price: price,
-    totalPrice: 0
-  })
-
-  pageQuantity = setPageQuantity() 
-  init()
+  if ( !isNameUsed ) {
+    inventory.push({
+      id: id,
+      date: date,
+      modDate: date,
+      name: name,
+      quantity: 0,
+      price: price,
+      totalPrice: 0
+    })
+  
+    pageQuantity = setPageQuantity() 
+    init()
+  } else {
+    alert( `JÁ EXISTE ${name.toUpperCase()} NO ESTOQUE` )
+  }
 }
 
 const handleRegisterFormSubmit = () => {
@@ -261,28 +257,28 @@ const addOperation = ( name, date, quantity ) => {
   })
 }
 
-const validQuantity = ( item, name ) => { 
+const validQuantity = ( item, name, quantity ) => { 
   return item.name === name && 
   item.quantity > 0 && quantity <= item.quantity
 }
 
-const notValidQuantity = ( item, name ) => { 
+const notValidQuantity = ( item, name, quantity ) => { 
   return item.name === name && 
   ( item.quantity === 0 || item.quantity < quantity )
 }
 
 const withdrawOperation = ( name, date, quantity ) => {
   inventory.forEach( item => {
-    const totalPrice = item.price * quantity
+    let totalPrice = item.price * quantity
 
-    if ( validQuantity( item, name ) ) {
+    if ( validQuantity( item, name, quantity ) ) {
       item.modDate = date
       item.quantity -= quantity
       item.totalPrice -= totalPrice
-    } else if ( notValidQuantity( item, name ) ) {
+    } else if ( notValidQuantity( item, name, quantity ) ) {
       alert(`QUANTIDADE DE ${item.name.toUpperCase()} MAIOR QUE O DISPONÍVEL.`)
     }
-
+    
   })
 }
 
@@ -364,13 +360,13 @@ const init = () => {
   updateLocalStorege()
 }
 
-setInitialMenu()
+handleMenuOptions( menuInventory, menuVisit )
 init()
 
 // EVENT LISTENERS
 
-menuInventory.addEventListener('click', displayInventory)
-menuVisit.addEventListener('click', displayInventory)
+menuInventory.addEventListener('click', displayChosenMenuOption)
+menuVisit.addEventListener('click', displayChosenMenuOption)
 registerButton.addEventListener('click', openRegisterForm)
 cancelRegisterButton.addEventListener('click', closeRegisterForm)
 operationButton.addEventListener('click', openOperationsForm)
