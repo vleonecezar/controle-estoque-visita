@@ -3,13 +3,16 @@
 
 const menuInventory = document.querySelector('#menu-inventory')
 const menuVisit = document.querySelector('#menu-visit')
+const tableHead = document.querySelector('#table-head')
 const registerButton = document.querySelector('#register-button')
 const cancelRegisterButton = document.querySelector('#cancel-register-button')
+const cancelOperationsButton = document.querySelector('#cancel-operations-button')
+const cancelVisitButton = document.querySelector('#cancel-visit-button')
 const operationButton = document.querySelector('#operation-button')
-const cancelOperationButton = document.querySelector('#cancel-operation-button')
 const operations = document.querySelector('#operations')
 const searchInput = document.querySelector('#search')
 const registerForm = document.querySelector('#register-form')
+const visitForm = document.querySelector('#visit-form')
 const operationForm = document.querySelector('#operation-form')
 const previousButton = document.querySelector('#previous')
 const nextButton = document.querySelector('#next')
@@ -24,8 +27,37 @@ let pageQuantity = 1
 const localStorageInventory = JSON.parse( localStorage.getItem( 'inventory' ) )
 let inventory = localStorage.getItem('inventory') != null ? localStorageInventory : []
 
+const localStorageVisit = JSON.parse( localStorage.getItem( 'visit' ) )
+let visit = localStorage.getItem('visit') != null ? localStorageVisit : []
+
 const updateLocalStorege = () => {
-	localStorage.setItem( 'inventory', JSON.stringify( inventory ) ) 
+	localStorage.setItem( 'inventory', JSON.stringify( inventory ) )
+	localStorage.setItem( 'visit', JSON.stringify( visit ) )
+}
+
+// VISIT
+
+const displayInventoryTHead = () => {
+  tableHead.innerHTML = `
+    <th>Entrada</th>
+    <th>Ultima Alteração</th>
+    <th>Nome</th>
+    <th>Quantidade</th>
+    <th>Preço Unitário</th>
+    <th>Preço Total</th>
+    <th id="actions">Ações</th>
+  `
+}
+
+const displayVisitTHead = () => {
+  tableHead.innerHTML = `
+    <th>Data</th>
+    <th>Nome</th>
+    <th>Endereço</th>
+    <th>Responsável</th>
+    <th>Telefone</th>
+    <th id="actions">Ações</th>
+  `
 }
 
 // MENU SETTINGS
@@ -47,8 +79,10 @@ const displayChosenMenuOption = event => {
 
   if ( chosenOption === 'menu-inventory' ) {
     handleMenuOptions( menuInventory, menuVisit )
+    displayInventoryTHead()
   } else {
     handleMenuOptions( menuVisit, menuInventory )
+    displayVisitTHead()
   }
 }
 
@@ -110,7 +144,7 @@ const verifySearchFieldAndDisplayItems = () => {
   const notSearching = inventory.slice( firstArrayItem, arrayLimiter )
   const searching = getSearchedItem( searchedItem )
   
-  if ( searchedItem === '' ) {
+  if ( searchedItem === '' && menuInventory ) {
     displayListIntoDOM( notSearching )
   } else {
     displayListIntoDOM( searching )
@@ -160,16 +194,24 @@ const removeItemIntoDOM = id => {
 
 // ----- REGISTER FORM -----
 
-const openRegisterForm = event => {
+const isRegisterOrVisitForm = event => {
   const inputName = document.querySelector( '#name' )
   const formID = event.target.id
+  const isInventory = menuVisit.style.backgroundColor === 'transparent'
+
+  if ( isInventory ) {
+    registerForm.style.display = 'inherit'
+  } else {
+    visitForm.style.display = 'inherit'
+  }
 
   //cleanForms(formID)
-  registerForm.style.display = 'inherit'
   inputName.focus()
 }
 
 const closeRegisterForm = () => registerForm.style.display = 'none'
+
+const closeVisitForm = () => visitForm.style.display = 'none'
 
 const addItemIntoArray = () => {
   const id = isUniqueID()
@@ -367,13 +409,19 @@ init()
 
 menuInventory.addEventListener('click', displayChosenMenuOption)
 menuVisit.addEventListener('click', displayChosenMenuOption)
-registerButton.addEventListener('click', openRegisterForm)
+
+registerButton.addEventListener('click', isRegisterOrVisitForm)
 cancelRegisterButton.addEventListener('click', closeRegisterForm)
+cancelVisitButton.addEventListener('click', closeVisitForm)
 operationButton.addEventListener('click', openOperationsForm)
-cancelOperationButton.addEventListener('click', closeOperationForm)
+cancelOperationsButton.addEventListener('click', closeOperationForm)
+
 operations.addEventListener('change', handleOperationColor)
+
 searchInput.addEventListener('keyup', verifySearchFieldAndDisplayItems)
+
 searchInput.addEventListener('blur', cleanSearchInput)
+
 registerForm.addEventListener('submit', handleRegisterFormSubmit)
 operationForm.addEventListener('submit', handleOperationsFormSubmit)
 previousButton.addEventListener('click', handlePageNumberWhenClicking)
