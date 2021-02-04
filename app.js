@@ -80,10 +80,14 @@ const displayChosenMenuOption = event => {
   if ( chosenOption === 'menu-inventory' ) {
     handleMenuOptions( menuInventory, menuVisit )
     displayInventoryTHead()
+    verifySearchFieldAndDisplayItems()
   } else {
     handleMenuOptions( menuVisit, menuInventory )
     displayVisitTHead()
+    verifySearchFieldAndDisplayItems()
   }
+
+  handleVisitButtons(chosenOption)
 }
 
 // PAGINATION SETTINGS
@@ -140,11 +144,17 @@ const getSearchedItem = name => {
 }
 
 const verifySearchFieldAndDisplayItems = () => {
+  const isVisitMenu = menuInventory.style.backgroundColor === 'transparent'
+
   const searchedItem = searchInput.value.toLowerCase()
+
   const notSearching = inventory.slice( firstArrayItem, arrayLimiter )
+  const notSearchingVisit = visit.slice( firstArrayItem, arrayLimiter )
   const searching = getSearchedItem( searchedItem )
-  
-  if ( searchedItem === '' && menuInventory ) {
+
+  if ( searchedItem === '' && isVisitMenu ) {
+    displayVisitIntoDOM(notSearchingVisit)
+  } else if ( searchedItem === '' && !isVisitMenu ) {
     displayListIntoDOM( notSearching )
   } else {
     displayListIntoDOM( searching )
@@ -181,15 +191,90 @@ const displayListIntoDOM = inventory => {
   })
 }
 
+const displayVisitIntoDOM = visit => {
+  const itemsList = document.querySelector( '#itens-list' )
+  itemsList.innerHTML = ''
+  
+  visit.forEach ( item => {
+    itemsList.innerHTML += `
+      <tr id='${ item.id }'>
+        <td>${ item.date }</td>
+        <td id="item-name">${ item.name }</td>
+        <td>${ item.adress }</td>
+        <td>${ item.responsible }</td>
+        <td>${ item.phone }</td>
+        <td>
+          <button id="trash" type="button" onClick="removeItemIntoDOM( ${ item.id } )">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    `
+  })
+}
+
 const removeItemIntoDOM = id => {
   const response = confirm( 'TEM CERTEZA QUE DESEJA DELETAR?' )
 
-  if ( response === true ) {
+  if ( response === true && menuVisit.style.backgroundColor === 'transparent' ) {
     inventory = inventory.filter( item => item.id != id )
+    pageQuantity = setPageQuantity() 
+  } else if ( response === true && menuVisit.style.backgroundColor != 'transparent' ) {
+    visit = visit.filter( item => item.id != id )
     pageQuantity = setPageQuantity() 
   }
 
   handlePageNumberWhenRemovingItem()
+}
+
+// ----- VISIT FORM -----
+
+const handleVisitFormSubmit = () => {
+  event.preventDefault()
+
+  addVisitIntoArray()
+  init()
+  closeVisitForm()
+}
+
+const addVisitIntoArray = () => {
+  const id = isUniqueID()
+  const date = document.querySelector('#date').value
+  const name = document.querySelector( '#visit-name' ).value.toLowerCase()
+  const adress = document.querySelector( '#adress' ).value
+  const responsible = document.querySelector('#responsible').value
+  const phone = document.querySelector('#phone').value
+  const isNameUsed = inventory.find(item => item.name === name)
+
+  if ( !isNameUsed ) {
+    visit.push({
+      id: id,
+      date: date,
+      name: name,
+      adress: adress,
+      responsible: responsible,
+      phone: phone,
+    })
+  
+    pageQuantity = setPageQuantity() 
+    init()
+  } else {
+    alert( `JÁ EXISTE ${name.toUpperCase()} NAS VISITAS` )
+  }
+}
+
+const handleVisitButtons = menu => {
+  if ( menu === 'menu-inventory' ) {
+    searchInput.style.display = 'initial'
+    document.querySelector('.search-insert').style.justifyContent = 'space-between'
+    document.querySelector('#search-icon').style.display = 'initial'
+    operationButton.style.display = 'initial'
+  } else {
+    searchInput.style.display = 'none'
+    document.querySelector('.search-insert').style.justifyContent = 'center'
+    document.querySelector('#search-icon').style.display = 'none'
+    operationButton.style.display = 'none'
+  }
 }
 
 // ----- REGISTER FORM -----
@@ -423,6 +508,7 @@ searchInput.addEventListener('keyup', verifySearchFieldAndDisplayItems)
 searchInput.addEventListener('blur', cleanSearchInput)
 
 registerForm.addEventListener('submit', handleRegisterFormSubmit)
+visitForm.addEventListener('submit', handleVisitFormSubmit)
 operationForm.addEventListener('submit', handleOperationsFormSubmit)
 previousButton.addEventListener('click', handlePageNumberWhenClicking)
 nextButton.addEventListener('click', handlePageNumberWhenClicking)
