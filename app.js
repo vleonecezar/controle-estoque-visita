@@ -17,10 +17,14 @@ const operationForm = document.querySelector('#operation-form')
 const previousButton = document.querySelector('#previous')
 const nextButton = document.querySelector('#next')
 
-let firstArrayItem = 0  // FIRST PARAMETER FROM SLICE 
-let arrayLimiter = 3  // SECOND PARAMETER FROM SLICE
-let currentPage = 1
-let pageQuantity = 1
+let firstInventoryArrayItem = 0  // FIRST PARAMETER FROM SLICE 
+let inventoryArrayLimiter = 3  // SECOND PARAMETER FROM SLICE
+let firstVisitArrayItem = 0  // FIRST PARAMETER FROM SLICE 
+let visitArrayLimiter = 3  // SECOND PARAMETER FROM SLICE
+let currentInventoryPage = 1
+let inventoryPageQuantity = 1
+let currentVisitPage = 1
+let visitPageQuantity = 1
 
 // ----- LOCAL STORAGE -----
 
@@ -81,10 +85,12 @@ const displayChosenMenuOption = event => {
     handleMenuOptions( menuInventory, menuVisit )
     displayInventoryTHead()
     verifySearchFieldAndDisplayItems()
+    displayPageNumbers()
   } else {
     handleMenuOptions( menuVisit, menuInventory )
     displayVisitTHead()
     verifySearchFieldAndDisplayItems()
+    displayPageNumbers()
   }
 
   handleVisitButtons(chosenOption)
@@ -92,45 +98,104 @@ const displayChosenMenuOption = event => {
 
 // PAGINATION SETTINGS
 
-const setPageQuantity = () => Math.round( ( inventory.length + 0.5 ) / 3 )
+const setInventoryPageQuantity = () => Math.round( ( inventory.length + 0.5 ) / 3 )
+const setVisitPageQuantity = () => Math.round( ( visit.length + 0.5 ) / 3 )
 
-const displayPageNumbers = () => {
+const displayInventoryPageNumbers = () => {
   const pageNumber = document.querySelector( '#page-number' )
-  pageNumber.innerText = `${ currentPage } de ${ pageQuantity }`
+  pageNumber.innerText = `${ currentInventoryPage } de ${ inventoryPageQuantity }`
 }
 
-const handlePageNumberWhenRemovingItem = () => {
-  if ( currentPage > pageQuantity ) {
-    currentPage -= 1
-    firstArrayItem -= 3
-    arrayLimiter -= 3
+const displayVisitPageNumbers = () => {
+  const pageNumber = document.querySelector( '#page-number' )
+  pageNumber.innerText = `${ currentVisitPage } de ${ visitPageQuantity }`
+}
 
-    if ( currentPage === 0 ) {
-      currentPage = 1
-      pageQuantity = 1
-      firstArrayItem = 0
-      arrayLimiter = 3 
+const displayPageNumbers = () => {
+  if ( menuInventory.style.backgroundColor != 'transparent' ) {
+    displayInventoryPageNumbers()
+  } else {
+    displayVisitPageNumbers()
+  }
+}
+
+const handleInventoryPageNumberWhenRemovingItem = () => {
+  if ( currentInventoryPage > inventoryPageQuantity ) {
+    currentInventoryPage -= 1
+    firstInventoryArrayItem -= 3
+    inventoryArrayLimiter -= 3
+
+    if ( currentInventoryPage === 0 ) {
+      currentInventoryPage = 1
+      inventoryPageQuantity = 1
+      firstInventoryArrayItem = 0
+      inventoryArrayLimiter = 3 
     }
   }
 
   init()
 }
 
-const handlePageNumberWhenClicking = e => {
+const handleVisitPageNumberWhenRemovingItem = () => {
+  if ( currentVisitPage > visitPageQuantity ) {
+    currentVisitPage -= 1
+    firstVisitArrayItem -= 3
+    visitArrayLimiter -= 3
+
+    if ( currentVisitPage === 0 ) {
+      currentVisitPage = 1
+      visitPageQuantity = 1
+      firstVisitArrayItem = 0
+      visitArrayLimiter = 3 
+    }
+  }
+
+  init()
+}
+
+const handlePageNumberWhenClicking = event => {
+  if ( menuInventory.style.backgroundColor != 'transparent' ) {
+    handleInventoryPageNumberWhenClicking(event)
+  } else {
+    handleVisitPageNumberWhenClicking(event)
+  }
+}
+
+const handleInventoryPageNumberWhenClicking = e => {
   const eventID = e.target.id
-  const greater = arrayLimiter > 3
-  const less = arrayLimiter < inventory.length
+  const greater = inventoryArrayLimiter > 3
+  const less = inventoryArrayLimiter < inventory.length
   const previous = eventID === 'previous' && greater
   const next = eventID === 'next' && less
 
   if ( previous ) {
-    firstArrayItem -= 3
-    arrayLimiter -= 3
-    currentPage -= 1
+    firstInventoryArrayItem -= 3
+    inventoryArrayLimiter -= 3
+    currentInventoryPage -= 1
   } else if ( next ) {
-    firstArrayItem += 3
-    arrayLimiter += 3
-    currentPage += 1
+    firstInventoryArrayItem += 3
+    inventoryArrayLimiter += 3
+    currentInventoryPage += 1
+  } 
+
+  init()
+}
+
+const handleVisitPageNumberWhenClicking = e => {
+  const eventID = e.target.id
+  const greater = visitArrayLimiter > 3
+  const less = visitArrayLimiter < visit.length
+  const previous = eventID === 'previous' && greater
+  const next = eventID === 'next' && less
+
+  if ( previous ) {
+    firstVisitArrayItem -= 3
+    visitArrayLimiter -= 3
+    currentVisitPage -= 1
+  } else if ( next ) {
+    firstVisitArrayItem += 3
+    visitArrayLimiter += 3
+    currentVisitPage += 1
   } 
 
   init()
@@ -148,8 +213,8 @@ const verifySearchFieldAndDisplayItems = () => {
 
   const searchedItem = searchInput.value.toLowerCase()
 
-  const notSearching = inventory.slice( firstArrayItem, arrayLimiter )
-  const notSearchingVisit = visit.slice( firstArrayItem, arrayLimiter )
+  const notSearching = inventory.slice( firstInventoryArrayItem, inventoryArrayLimiter )
+  const notSearchingVisit = visit.slice( firstVisitArrayItem, visitArrayLimiter )
   const searching = getSearchedItem( searchedItem )
 
   if ( searchedItem === '' && isVisitMenu ) {
@@ -218,13 +283,13 @@ const removeItemIntoDOM = id => {
 
   if ( response === true && menuVisit.style.backgroundColor === 'transparent' ) {
     inventory = inventory.filter( item => item.id != id )
-    pageQuantity = setPageQuantity() 
+    inventoryPageQuantity = setInventoryPageQuantity() 
+    handleInventoryPageNumberWhenRemovingItem()
   } else if ( response === true && menuVisit.style.backgroundColor != 'transparent' ) {
     visit = visit.filter( item => item.id != id )
-    pageQuantity = setPageQuantity() 
+    visitPageQuantity = setVisitPageQuantity() 
+    handleVisitPageNumberWhenRemovingItem()
   }
-
-  handlePageNumberWhenRemovingItem()
 }
 
 // ----- VISIT FORM -----
@@ -244,7 +309,7 @@ const addVisitIntoArray = () => {
   const adress = document.querySelector( '#adress' ).value
   const responsible = document.querySelector('#responsible').value
   const phone = document.querySelector('#phone').value
-  const isNameUsed = inventory.find(item => item.name === name)
+  const isNameUsed = visit.find(item => item.name === name)
 
   if ( !isNameUsed ) {
     visit.push({
@@ -256,7 +321,7 @@ const addVisitIntoArray = () => {
       phone: phone,
     })
   
-    pageQuantity = setPageQuantity() 
+    visitPageQuantity = setVisitPageQuantity() 
     init()
   } else {
     alert( `JÁ EXISTE ${name.toUpperCase()} NAS VISITAS` )
@@ -316,7 +381,7 @@ const addItemIntoArray = () => {
       totalPrice: 0
     })
   
-    pageQuantity = setPageQuantity() 
+    inventoryPageQuantity = setInventoryPageQuantity() 
     init()
   } else {
     alert( `JÁ EXISTE ${name.toUpperCase()} NO ESTOQUE` )
@@ -442,16 +507,32 @@ const fillNamesOptions = () => {
 
 // ----- FORMATTING AND ANOTHER INFOS -----
 
-const generetedID = () => Math.round( Math.random() * inventory.length )
+const generetedID = () => {
+  if ( menuInventory.style.backgroundColor != 'transparent' ) {
+    return Math.round( Math.random() * inventory.length )
+  } else {
+    return Math.round( Math.random() * visit.length )
+  }
+} 
 
 const isUniqueID = () => {
-  const inventoryIDs = inventory.map( item => item.id )
+  let arrayIDs = []
   let id = generetedID() + 1
 
-  while ( inventoryIDs.includes( id ) ) {
-    id = generetedID() + 1
-  }
+  if ( menuInventory.style.backgroundColor != 'transparent' ) {
+    arrayIDs = inventory.map( item => item.id )
 
+    while ( arrayIDs.includes( id ) ) {
+      id = generetedID() + 1
+    }
+  } else {
+    arrayIDs = visit.map( item => item.id )
+
+    while ( arrayIDs.includes( id ) ) {
+      id = generetedID() + 1
+    }
+  }
+  
   return id
 }
 
