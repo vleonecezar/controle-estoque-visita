@@ -3,12 +3,7 @@
 
 const menuInventory = document.querySelector('#menu-inventory')
 const menuVisit = document.querySelector('#menu-visit')
-const tableHead = document.querySelector('#table-head')
-const registerButton = document.querySelector('#register-button')
-const cancelRegisterButton = document.querySelector('#cancel-register-button')
-const cancelOperationsButton = document.querySelector('#cancel-operations-button')
-const cancelVisitButton = document.querySelector('#cancel-visit-button')
-const operationButton = document.querySelector('#operation-button')
+
 const operations = document.querySelector('#operations')
 const searchInput = document.querySelector('#search')
 const registerForm = document.querySelector('#register-form')
@@ -37,31 +32,6 @@ let visit = localStorage.getItem('visit') != null ? localStorageVisit : []
 const updateLocalStorege = () => {
 	localStorage.setItem( 'inventory', JSON.stringify( inventory ) )
 	localStorage.setItem( 'visit', JSON.stringify( visit ) )
-}
-
-// VISIT
-
-const displayInventoryTHead = () => {
-  tableHead.innerHTML = `
-    <th>Entrada</th>
-    <th>Ultima Alteração</th>
-    <th>Nome</th>
-    <th>Quantidade</th>
-    <th>Preço Unitário</th>
-    <th>Preço Total</th>
-    <th id="actions">Ações</th>
-  `
-}
-
-const displayVisitTHead = () => {
-  tableHead.innerHTML = `
-    <th>Data</th>
-    <th>Nome</th>
-    <th>Endereço</th>
-    <th>Responsável</th>
-    <th>Telefone</th>
-    <th id="actions">Ações</th>
-  `
 }
 
 // MENU SETTINGS
@@ -94,6 +64,31 @@ const displayChosenMenuOption = event => {
   }
 
   handleVisitButtons(chosenOption)
+}
+
+const tableHead = document.querySelector('#table-head')
+
+const displayInventoryTHead = () => {
+  tableHead.innerHTML = `
+    <th>Entrada</th>
+    <th>Ultima Alteração</th>
+    <th>Nome</th>
+    <th>Quantidade</th>
+    <th>Preço Unitário</th>
+    <th>Preço Total</th>
+    <th id="actions">Ações</th>
+  `
+}
+
+const displayVisitTHead = () => {
+  tableHead.innerHTML = `
+    <th>Data</th>
+    <th>Nome</th>
+    <th>Endereço</th>
+    <th>Responsável</th>
+    <th>Telefone</th>
+    <th id="actions">Ações</th>
+  `
 }
 
 // PAGINATION SETTINGS
@@ -344,24 +339,42 @@ const handleVisitButtons = menu => {
 
 // ----- REGISTER FORM -----
 
-const isRegisterOrVisitForm = event => {
+// OPEN INVENTORY OR VISIT FORM
+document.querySelector('#register-button').addEventListener('click', event => {
+
   const inputName = document.querySelector( '#name' )
-  const formID = event.target.id
-  const isInventory = menuVisit.style.backgroundColor === 'transparent'
+    const formID = event.target.id
+    const isInventory = menuInventory.style.backgroundColor != 'transparent'
+  
+    if ( isInventory ) {
+      registerForm.style.display = 'inherit'
+    } else {
+      visitForm.style.display = 'inherit'
+    }
+  
+    //cleanForms(formID)
+    inputName.focus()
+})
 
-  if ( isInventory ) {
-    registerForm.style.display = 'inherit'
-  } else {
-    visitForm.style.display = 'inherit'
-  }
-
-  //cleanForms(formID)
-  inputName.focus()
+// CLOSE INVENTORY FORM
+const closeRegisterForm = () => {
+  registerForm.style.display = 'none'
 }
 
-const closeRegisterForm = () => registerForm.style.display = 'none'
+document.querySelector('#cancel-register-button')
+  .addEventListener('click', closeRegisterForm())
 
-const closeVisitForm = () => visitForm.style.display = 'none'
+  
+
+
+// CLOSE VISIT FORM
+const closeVisitForm = () => {
+  registerForm.style.display = 'none'
+}
+
+document.querySelector('#cancel-visit-button')
+  .addEventListener('click', closeVisitForm)
+
 
 const addItemIntoArray = () => {
   const id = isUniqueID()
@@ -398,20 +411,25 @@ const handleRegisterFormSubmit = () => {
 
 // ----- OPERATION FORM -----
 
-const openOperationsForm = event => {
+// OPEN OPERATIONS FORM
+document.querySelector('#operation-button')
+  .addEventListener('click', function openOperationsForm(event) {
   const formID = event.target.id
 
   fillNamesOptions()
   cleanForms(formID)
 
   operationForm.style.display = 'inherit'
-}
+})
 
+// CLOSE OPERATION FORM
 const closeOperationForm = () => {
   operationForm.style.display = 'none'
-
   setInitialOperationColor()
 }
+
+document.querySelector('#cancel-operations-button')
+  .addEventListener('click', closeOperationForm)
 
 const emptyListAlert = () => {
   const itemName = document.querySelector('#operation-item-name').value
@@ -576,11 +594,6 @@ init()
 menuInventory.addEventListener('click', displayChosenMenuOption)
 menuVisit.addEventListener('click', displayChosenMenuOption)
 
-registerButton.addEventListener('click', isRegisterOrVisitForm)
-cancelRegisterButton.addEventListener('click', closeRegisterForm)
-cancelVisitButton.addEventListener('click', closeVisitForm)
-operationButton.addEventListener('click', openOperationsForm)
-cancelOperationsButton.addEventListener('click', closeOperationForm)
 
 operations.addEventListener('change', handleOperationColor)
 
@@ -593,3 +606,4 @@ visitForm.addEventListener('submit', handleVisitFormSubmit)
 operationForm.addEventListener('submit', handleOperationsFormSubmit)
 previousButton.addEventListener('click', handlePageNumberWhenClicking)
 nextButton.addEventListener('click', handlePageNumberWhenClicking)
+
