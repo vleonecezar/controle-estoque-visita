@@ -24,46 +24,68 @@ let visitPageQuantity = 1
 // ----- LOCAL STORAGE -----
 
 const localStorageInventory = JSON.parse( localStorage.getItem( 'inventory' ) )
-let inventory = localStorage.getItem('inventory') != null ? localStorageInventory : []
+let inventory = localStorage
+  .getItem('inventory') != null ? localStorageInventory : []
+
+const inventoryItemPerPage = () => {
+  return inventory.slice( firstInventoryArrayItem, inventoryArrayLimiter )
+}
+
+const updateInventoryLocalStorege = () => {
+	localStorage.setItem( 'inventory', JSON.stringify( inventory ) )
+}
 
 const localStorageVisit = JSON.parse( localStorage.getItem( 'visit' ) )
-let visit = localStorage.getItem('visit') != null ? localStorageVisit : []
+let visit = localStorage
+  .getItem('visit') != null ? localStorageVisit : []
+  
+const visitItemPerPage = () => {
+  return visit.slice( firstVisitArrayItem, visitArrayLimiter )
+}
 
-const updateLocalStorege = () => {
-	localStorage.setItem( 'inventory', JSON.stringify( inventory ) )
+const updateVisitLocalStorege = () => {
 	localStorage.setItem( 'visit', JSON.stringify( visit ) )
 }
 
 // MENU SETTINGS
 
-const handleMenuOptions = (display, hide) => {
-  display.style.backgroundColor = 'rgb(231, 231, 231)'
-  display.style.marginRight = '-0.5px'
-  display.style.borderTop = '1px solid rgba(0, 0, 0, 0.199)'
-  display.style.borderBottom = '1px solid rgba(0, 0, 0, 0.199)'
-
-  hide.style.backgroundColor = 'transparent'
-  hide.style.marginRight = '0'
-  hide.style.borderTop = '1px solid transparent'
-  hide.style.borderBottom = '1px solid transparent'
+const chosenOptionEffects = option => {
+  option.style.backgroundColor = 'rgb(231, 231, 231)'
+  option.style.marginRight = '-0.5px'
+  option.style.borderTop = '1px solid rgba(0, 0, 0, 0.199)'
+  option.style.borderBottom = '1px solid rgba(0, 0, 0, 0.199)'
 }
 
-const displayChosenMenuOption = event => {
+const notChosenOptionEffects = option => {
+  option.style.backgroundColor = 'transparent'
+  option.style.marginRight = '0'
+  option.style.borderTop = '1px solid transparent'
+  option.style.borderBottom = '1px solid transparent'
+}
+
+const handleMenuOptions = (chosen, notChosen) => {
+  chosenOptionEffects(chosen)
+  notChosenOptionEffects(notChosen)
+}
+
+const displayChosenOptionOnScreen = event => {
   const chosenOption = event.target.id
 
   if ( chosenOption === 'menu-inventory' ) {
     handleMenuOptions( menuInventory, menuVisit )
     displayInventoryTHead()
-    verifySearchFieldAndDisplayItems()
-    displayPageNumbers()
+    displayInventoryOnScreen(inventoryItemPerPage())
+    setInitialCurrentPage()
+    displayInventoryPageNumbers()
   } else {
     handleMenuOptions( menuVisit, menuInventory )
     displayVisitTHead()
-    verifySearchFieldAndDisplayItems()
-    displayPageNumbers()
+    displayVisitOnScreen(visitItemPerPage())
+    setInitialCurrentPage()
+    displayVisitPageNumbers()
   }
 
-  handleVisitButtons(chosenOption)
+  handleOperationButtonAndInput(chosenOption)
 }
 
 const tableHead = document.querySelector('#table-head')
@@ -91,27 +113,38 @@ const displayVisitTHead = () => {
   `
 }
 
+menuInventory.addEventListener('click', displayChosenOptionOnScreen)
+menuVisit.addEventListener('click', displayChosenOptionOnScreen)
+
 // PAGINATION SETTINGS
 
-const setInventoryPageQuantity = () => Math.round( ( inventory.length + 0.5 ) / 3 )
-const setVisitPageQuantity = () => Math.round( ( visit.length + 0.5 ) / 3 )
+const setInitialCurrentPage = () => {
+  firstInventoryArrayItem = 0
+  inventoryArrayLimiter = 3
+  firstVisitArrayItem = 0
+  visitArrayLimiter = 3
+  currentInventoryPage = 1
+  currentVisitPage = 1
+}
+
+const setInventoryPageQuantity = () => Math
+  .round( ( inventory.length + 0.5 ) / 3 )
+
+const setVisitPageQuantity = () => Math
+  .round( ( visit.length + 0.5 ) / 3 )
 
 const displayInventoryPageNumbers = () => {
   const pageNumber = document.querySelector( '#page-number' )
-  pageNumber.innerText = `${ currentInventoryPage } de ${ inventoryPageQuantity }`
+  pageNumber.innerHTML = `
+    ${ currentInventoryPage } de ${ inventoryPageQuantity }
+  `
 }
 
 const displayVisitPageNumbers = () => {
   const pageNumber = document.querySelector( '#page-number' )
-  pageNumber.innerText = `${ currentVisitPage } de ${ visitPageQuantity }`
-}
-
-const displayPageNumbers = () => {
-  if ( menuInventory.style.backgroundColor != 'transparent' ) {
-    displayInventoryPageNumbers()
-  } else {
-    displayVisitPageNumbers()
-  }
+  pageNumber.innerHTML = `
+    ${ currentVisitPage } de ${ visitPageQuantity }
+  `
 }
 
 const handleInventoryPageNumberWhenRemovingItem = () => {
@@ -128,7 +161,8 @@ const handleInventoryPageNumberWhenRemovingItem = () => {
     }
   }
 
-  init()
+  displayInventoryPageNumbers()
+  updateInventoryLocalStorege()
 }
 
 const handleVisitPageNumberWhenRemovingItem = () => {
@@ -145,23 +179,14 @@ const handleVisitPageNumberWhenRemovingItem = () => {
     }
   }
 
-  init()
+  updateVisitLocalStorege()
+  displayVisitPageNumbers()
 }
 
-const handlePageNumberWhenClicking = event => {
-  if ( menuInventory.style.backgroundColor != 'transparent' ) {
-    handleInventoryPageNumberWhenClicking(event)
-  } else {
-    handleVisitPageNumberWhenClicking(event)
-  }
-}
-
-const handleInventoryPageNumberWhenClicking = e => {
-  const eventID = e.target.id
-  const greater = inventoryArrayLimiter > 3
-  const less = inventoryArrayLimiter < inventory.length
-  const previous = eventID === 'previous' && greater
-  const next = eventID === 'next' && less
+const handleInventoryPageNumberWhenClicking = event => {
+  const eventID = event.target.id
+  const previous = eventID === 'previous' && inventoryArrayLimiter > 3
+  const next = eventID === 'next' && inventoryArrayLimiter < inventory.length
 
   if ( previous ) {
     firstInventoryArrayItem -= 3
@@ -173,15 +198,14 @@ const handleInventoryPageNumberWhenClicking = e => {
     currentInventoryPage += 1
   } 
 
-  init()
+  displayInventoryOnScreen(inventoryItemPerPage())
+  displayInventoryPageNumbers()
 }
 
-const handleVisitPageNumberWhenClicking = e => {
-  const eventID = e.target.id
-  const greater = visitArrayLimiter > 3
-  const less = visitArrayLimiter < visit.length
-  const previous = eventID === 'previous' && greater
-  const next = eventID === 'next' && less
+const handleVisitPageNumberWhenClicking = event => {
+  const eventID = event.target.id
+  const previous = eventID === 'previous' && visitArrayLimiter > 3
+  const next = eventID === 'next' && visitArrayLimiter < visit.length
 
   if ( previous ) {
     firstVisitArrayItem -= 3
@@ -193,7 +217,16 @@ const handleVisitPageNumberWhenClicking = e => {
     currentVisitPage += 1
   } 
 
-  init()
+  displayVisitOnScreen(visitItemPerPage())
+  displayVisitPageNumbers()
+}
+
+const handlePageNumberWhenClicking = event => {
+  if (menuInventory.style.backgroundColor != 'transparent') {
+    handleInventoryPageNumberWhenClicking(event)
+  } else {
+    handleVisitPageNumberWhenClicking(event)
+  }
 }
 
 // ----- SEARCH -----
@@ -203,21 +236,14 @@ const getSearchedItem = name => {
   return filteredItens
 }
 
-const verifySearchFieldAndDisplayItems = () => {
-  const isVisitMenu = menuInventory.style.backgroundColor === 'transparent'
-
+const verifySearchFieldAndDisplayInventory = () => {
   const searchedItem = searchInput.value.toLowerCase()
-
-  const notSearching = inventory.slice( firstInventoryArrayItem, inventoryArrayLimiter )
-  const notSearchingVisit = visit.slice( firstVisitArrayItem, visitArrayLimiter )
   const searching = getSearchedItem( searchedItem )
-
-  if ( searchedItem === '' && isVisitMenu ) {
-    displayVisitIntoDOM(notSearchingVisit)
-  } else if ( searchedItem === '' && !isVisitMenu ) {
-    displayListIntoDOM( notSearching )
+    
+  if ( searchedItem === '' ) {
+    displayInventoryOnScreen( inventoryItemPerPage() )
   } else {
-    displayListIntoDOM( searching )
+    displayInventoryOnScreen( searching )
   }
 }
 
@@ -228,7 +254,7 @@ const cleanSearchInput = () => {
 
 // ----- DISPLAY LIST INTO DOM -----
 
-const displayListIntoDOM = inventory => {
+const displayInventoryOnScreen = inventory => {
   const itemsList = document.querySelector( '#itens-list' )
   itemsList.innerHTML = ''
   
@@ -242,7 +268,7 @@ const displayListIntoDOM = inventory => {
         <td>${ FormatCurrency( item.price ) }</td>
         <td>${ FormatCurrency( item.totalPrice ) }</td>
         <td>
-          <button id="trash" type="button" onClick="removeItemIntoDOM( ${ item.id } )">
+          <button id="trash" type="button" onClick="removeInventoryItem( ${ item.id } )">
             <i class="fas fa-trash"></i>
           </button>
         </td>
@@ -251,7 +277,7 @@ const displayListIntoDOM = inventory => {
   })
 }
 
-const displayVisitIntoDOM = visit => {
+const displayVisitOnScreen = visit => {
   const itemsList = document.querySelector( '#itens-list' )
   itemsList.innerHTML = ''
   
@@ -264,7 +290,7 @@ const displayVisitIntoDOM = visit => {
         <td>${ item.responsible }</td>
         <td>${ item.phone }</td>
         <td>
-          <button id="trash" type="button" onClick="removeItemIntoDOM( ${ item.id } )">
+          <button id="trash" type="button" onClick="removeVisitItem( ${ item.id } )">
             <i class="fas fa-trash"></i>
           </button>
         </td>
@@ -273,17 +299,26 @@ const displayVisitIntoDOM = visit => {
   })
 }
 
-const removeItemIntoDOM = id => {
+const removeInventoryItem = id => {
   const response = confirm( 'TEM CERTEZA QUE DESEJA DELETAR?' )
 
-  if ( response === true && menuVisit.style.backgroundColor === 'transparent' ) {
+  if ( response === true ) {
     inventory = inventory.filter( item => item.id != id )
     inventoryPageQuantity = setInventoryPageQuantity() 
     handleInventoryPageNumberWhenRemovingItem()
-  } else if ( response === true && menuVisit.style.backgroundColor != 'transparent' ) {
+    displayInventoryOnScreen(inventoryItemPerPage())
+  }
+}
+
+const removeVisitItem = id => {
+  const response = confirm( 'TEM CERTEZA QUE DESEJA DELETAR?' )
+
+  if ( response === true ) {
     visit = visit.filter( item => item.id != id )
     visitPageQuantity = setVisitPageQuantity() 
     handleVisitPageNumberWhenRemovingItem()
+    displayVisitOnScreen(visitItemPerPage())
+   
   }
 }
 
@@ -291,9 +326,8 @@ const removeItemIntoDOM = id => {
 
 const handleVisitFormSubmit = () => {
   event.preventDefault()
-
   addVisitIntoArray()
-  init()
+  displayVisitOnScreen(visitItemPerPage())
   closeVisitForm()
 }
 
@@ -317,61 +351,65 @@ const addVisitIntoArray = () => {
     })
   
     visitPageQuantity = setVisitPageQuantity() 
-    init()
+    displayVisitPageNumbers()
+    updateVisitLocalStorege()
   } else {
     alert( `JÁ EXISTE ${name.toUpperCase()} NAS VISITAS` )
   }
 }
 
-const handleVisitButtons = menu => {
+const displayButtonAndInputOnScreen = button => {
+  searchInput.style.display = 'initial'
+  document.querySelector('.search-insert').style.justifyContent = 'space-between'
+  document.querySelector('#search-icon').style.display = 'initial'
+  button.style.display = 'initial'
+}
+
+const hideButtonAndInputOnScreen = button => {
+  searchInput.style.display = 'none'
+  document.querySelector('.search-insert').style.justifyContent = 'center'
+  document.querySelector('#search-icon').style.display = 'none'
+  button.style.display = 'none'
+}
+
+const handleOperationButtonAndInput = menu => {
+  const operationButton = document.querySelector('#operation-button')
+
   if ( menu === 'menu-inventory' ) {
-    searchInput.style.display = 'initial'
-    document.querySelector('.search-insert').style.justifyContent = 'space-between'
-    document.querySelector('#search-icon').style.display = 'initial'
-    operationButton.style.display = 'initial'
+    displayButtonAndInputOnScreen(operationButton)
   } else {
-    searchInput.style.display = 'none'
-    document.querySelector('.search-insert').style.justifyContent = 'center'
-    document.querySelector('#search-icon').style.display = 'none'
-    operationButton.style.display = 'none'
+    hideButtonAndInputOnScreen(operationButton)
   }
 }
 
 // ----- REGISTER FORM -----
 
 // OPEN INVENTORY OR VISIT FORM
-document.querySelector('#register-button').addEventListener('click', event => {
-
+const openRegisterForm = event => {
+  const formID = event.target.id
   const inputName = document.querySelector( '#name' )
-    const formID = event.target.id
-    const isInventory = menuInventory.style.backgroundColor != 'transparent'
+  const isInventory = menuInventory.style.backgroundColor != 'transparent'
   
-    if ( isInventory ) {
-      registerForm.style.display = 'inherit'
-    } else {
-      visitForm.style.display = 'inherit'
-    }
+  if ( isInventory ) {
+    registerForm.style.display = 'inherit'
+  } else {
+    visitForm.style.display = 'inherit'
+  }
   
-    //cleanForms(formID)
-    inputName.focus()
-})
+  //cleanForms(formID)
+  inputName.focus()
+}
+
+document.querySelector('#register-button')
+  .addEventListener('click', openRegisterForm)
 
 // CLOSE INVENTORY FORM
-const closeRegisterForm = () => {
-  registerForm.style.display = 'none'
-}
-
+const closeRegisterForm = () => registerForm.style.display = 'none'
 document.querySelector('#cancel-register-button')
-  .addEventListener('click', closeRegisterForm())
-
-  
-
+  .addEventListener('click', closeRegisterForm)
 
 // CLOSE VISIT FORM
-const closeVisitForm = () => {
-  registerForm.style.display = 'none'
-}
-
+const closeVisitForm = () => visitForm.style.display = 'none'
 document.querySelector('#cancel-visit-button')
   .addEventListener('click', closeVisitForm)
 
@@ -395,34 +433,35 @@ const addItemIntoArray = () => {
     })
   
     inventoryPageQuantity = setInventoryPageQuantity() 
-    init()
+    updateInventoryLocalStorege()
+    displayInventoryPageNumbers()
   } else {
     alert( `JÁ EXISTE ${name.toUpperCase()} NO ESTOQUE` )
   }
 }
 
-const handleRegisterFormSubmit = () => {
+const handleRegisterFormSubmit = event => {
   event.preventDefault()
-
   addItemIntoArray()
-  init()
   closeRegisterForm()
 }
 
+document.addEventListener('submit', handleRegisterFormSubmit)
+
 // ----- OPERATION FORM -----
 
-// OPEN OPERATIONS FORM
-document.querySelector('#operation-button')
-  .addEventListener('click', function openOperationsForm(event) {
+// OPEN FORM
+const openOperationsForm = event => {
   const formID = event.target.id
-
   fillNamesOptions()
   cleanForms(formID)
-
   operationForm.style.display = 'inherit'
-})
+}
 
-// CLOSE OPERATION FORM
+document.querySelector('#operation-button')
+  .addEventListener('click', openOperationsForm)
+
+// CLOSE FORM
 const closeOperationForm = () => {
   operationForm.style.display = 'none'
   setInitialOperationColor()
@@ -581,27 +620,25 @@ const cleanForms = id => {
 // ----- INIT -----
 
 const init = () => {
-  verifySearchFieldAndDisplayItems()
-  displayPageNumbers()
-  updateLocalStorege()
+  handleMenuOptions( menuInventory, menuVisit )
+  displayInventoryOnScreen(inventoryItemPerPage())
+  displayInventoryPageNumbers()
 }
 
-handleMenuOptions( menuInventory, menuVisit )
 init()
 
 // EVENT LISTENERS
 
-menuInventory.addEventListener('click', displayChosenMenuOption)
-menuVisit.addEventListener('click', displayChosenMenuOption)
+
 
 
 operations.addEventListener('change', handleOperationColor)
 
-searchInput.addEventListener('keyup', verifySearchFieldAndDisplayItems)
+searchInput.addEventListener('keyup', verifySearchFieldAndDisplayInventory)
 
 searchInput.addEventListener('blur', cleanSearchInput)
 
-registerForm.addEventListener('submit', handleRegisterFormSubmit)
+
 visitForm.addEventListener('submit', handleVisitFormSubmit)
 operationForm.addEventListener('submit', handleOperationsFormSubmit)
 previousButton.addEventListener('click', handlePageNumberWhenClicking)
