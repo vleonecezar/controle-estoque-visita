@@ -1,5 +1,5 @@
 
-// GLOBAL VARIABLES
+////// GLOBAL VARIABLES //////
 
 const menuInventory = document.querySelector('#menu-inventory')
 const menuVisit = document.querySelector('#menu-visit')
@@ -13,7 +13,7 @@ let inventoryPageQuantity = 1
 let currentVisitPage = 1
 let visitPageQuantity = 1
 
-// ----- LOCAL STORAGE -----
+////// LOCAL STORAGE //////
 
 // INVENTORY
 const localStorageInventory = JSON.parse(localStorage.getItem('inventory'))
@@ -41,7 +41,7 @@ const updateVisitLocalStorege = () => {
   localStorage.setItem('visit', JSON.stringify(visit))
 }
 
-// MENU SETTINGS
+////// MENU SETTINGS //////
 
 const chosenOptionEffects = option => {
   option.style.backgroundColor = 'rgb(231, 231, 231)'
@@ -67,12 +67,14 @@ const displayChosenOptionOnScreen = event => {
 
   if (chosenOption === 'menu-inventory') {
     handleMenuOptions(menuInventory, menuVisit)
+    inventoryTitle()
     displayInventoryTHead()
     displayInventoryOnScreen(inventoryItemPerPage())
     setInitialCurrentPage()
     displayInventoryPageNumbers()
   } else {
     handleMenuOptions(menuVisit, menuInventory)
+    visitTitle()
     displayVisitTHead()
     displayVisitOnScreen(visitItemPerPage())
     setInitialCurrentPage()
@@ -98,7 +100,7 @@ const displayInventoryTHead = () => {
 
 const displayVisitTHead = () => {
   tableHead.innerHTML = `
-    <th>Data</th>
+    <th>Data da Visita</th>
     <th>Nome</th>
     <th>Endereço</th>
     <th>Responsável</th>
@@ -107,10 +109,14 @@ const displayVisitTHead = () => {
   `
 }
 
+const title = document.querySelector('#header-title')
+const inventoryTitle = () => title.innerText = 'Páginas do Estoque'
+const visitTitle = () => title.innerText = 'Páginas de Visitas'
+
 menuInventory.addEventListener('click', displayChosenOptionOnScreen)
 menuVisit.addEventListener('click', displayChosenOptionOnScreen)
 
-// PAGINATION SETTINGS
+////// PAGINATION SETTINGS //////
 
 const setInitialCurrentPage = () => {
   firstInventoryArrayItem = 0
@@ -229,7 +235,7 @@ const nextButton = document.querySelector('#next')
 previousButton.addEventListener('click', handlePageNumberWhenClicking)
 nextButton.addEventListener('click', handlePageNumberWhenClicking)
 
-// ----- SEARCH -----
+////// SEARCH //////
 
 const searchInput = document.querySelector('#search')
 
@@ -258,7 +264,7 @@ const cleanSearchInput = () => {
 
 searchInput.addEventListener('blur', cleanSearchInput)
 
-// ----- VISIT FORM -----
+////// VISIT FORM //////
 
 // CLOSE VISIT FORM
 const closeVisitForm = () => visitForm.style.display = 'none'
@@ -304,6 +310,24 @@ const removeVisitItem = id => {
   }
 }
 
+const formatingPhoneNumber = (phoneNumber) => {
+  let ddd = phoneNumber.slice(0,2)
+  let numberA = 0
+  let numberB = 0
+  let isCellPhone = phoneNumber.length === 11
+  let notCellPhone = phoneNumber.length === 10
+
+  if(isCellPhone) {
+    numberA = phoneNumber.slice(2, 7)
+    numberB = phoneNumber.slice(7)
+  } else if (notCellPhone) {
+    numberA = phoneNumber.slice(2, 6)
+    numberB = phoneNumber.slice(6)
+  }
+  
+  return `(${ddd}) ${numberA}-${numberB}`
+}
+
 const displayVisitOnScreen = visit => {
   const itemsList = document.querySelector('#itens-list')
   itemsList.innerHTML = ''
@@ -315,7 +339,7 @@ const displayVisitOnScreen = visit => {
         <td id="item-name">${item.name}</td>
         <td>${item.adress}</td>
         <td>${item.responsible}</td>
-        <td>${item.phone}</td>
+        <td>${formatingPhoneNumber(item.phone)}</td>
         <td>
           <button id="trash" type="button" onClick="removeVisitItem( ${item.id} )">
             <i class="fas fa-trash"></i>
@@ -337,7 +361,7 @@ const handleVisitFormSubmit = event => {
 
 visitForm.addEventListener('submit', handleVisitFormSubmit)
 
-// ----- REGISTER FORM -----
+////// REGISTER FORM //////
 
 const registerForm = document.querySelector('#register-form')
 
@@ -435,7 +459,7 @@ const handleRegisterFormSubmit = event => {
 
 registerForm.addEventListener('submit', handleRegisterFormSubmit)
 
-// ----- OPERATION FORM -----
+////// OPERATION FORM //////
 
 const operations = document.querySelector('#operations')
 const operationForm = document.querySelector('#operation-form')
@@ -572,7 +596,7 @@ const handleOperationButtonAndInput = menu => {
   }
 }
 
-// ----- FORMATTING AND ANOTHER INFOS -----
+////// FORMATTING AND ANOTHER INFOS //////
 
 const generetedID = array => Math.round(Math.random() * array.length)
 const getArrayIDs = array => array.map(item => item.id)
@@ -607,10 +631,11 @@ const cleanInventoryForm = () => registerForm.reset()
 const cleanVisitForm = () => visitForm.reset()
 const cleanOperationForm = () => operationForm.reset()
 
-// ----- INIT -----
+////// INIT //////
 
 const init = () => {
   handleMenuOptions(menuInventory, menuVisit)
+  inventoryTitle()
   displayInventoryOnScreen(inventoryItemPerPage())
   displayInventoryPageNumbers()
 }
