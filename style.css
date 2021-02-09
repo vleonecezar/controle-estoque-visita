@@ -9,16 +9,24 @@
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background-color: rgba(0, 179, 255, 0.068);
   font-family: 'Blinker', sans-serif;
   display: flex;
   justify-content: center;
 }
 
+body > h2 {
+  margin-top: 20px;
+  font-size: 30px;
+}
+
 .main-container {
   background-color: #fff;
   display: flex;
-  margin: 50px 0;
+  margin: 30px 0;
   border: 1px solid rgba(0, 0, 0, 0.199);
   border-radius: 20px;
   width: 100%;
