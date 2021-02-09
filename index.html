@@ -9,6 +9,8 @@
 </head>
 <body>
 
+  <h2>Controle de Estoque e Visitas</h2>
+
   <div class="main-container">
 
     <aside class="menu">
@@ -16,8 +18,8 @@
       <img src="./assets/images/logo.png" alt="logo" width="80px">
 
       <ul>
-        <li class="fas fa-box-open" id="menu-inventory"></li>
-        <li class="fas fa-walking" id="menu-visit"></li>
+        <li class="fas fa-box-open" id="menu-inventory" title="Estoque"></li>
+        <li class="fas fa-walking" id="menu-visit" title="Visitas"></li>
       </ul>
 
     </aside>
@@ -25,7 +27,7 @@
     <div class="container">
   
       <header>
-        <h2 id="header-title">Controle de Estoque e Visitas</h2>
+        <h2 id="header-title"></h2>
       </header>
   
       <div class="search-insert">
@@ -33,13 +35,13 @@
         <div class="input-container">
 
           <i id="search-icon" class="fas fa-search"></i>
-          <input type="search" id="search" placeholder="Procurar item no estoque">  
+          <input type="search" id="search" placeholder="Procurar Item no Estoque">  
 
         </div>
 
         <div>
 
-          <button type="button" id="register-button"><i class="fas fa-plus-square"></i> Registrar</button>
+          <button type="button" id="register-button"><i class="fas fa-plus-square"></i> Cadastrar</button>
           <button type="button" id="operation-button"><i class="fas fa-tasks"></i> Gerenciar</button>
           
         </div>
@@ -48,7 +50,7 @@
 
       <form id="register-form">
 
-        <h2 id="form-title">Registro</h2>
+        <h2 id="form-title">Cadastro de Item</h2>
     
         <div class="form-field">
           <label for="name">Nome:</label>
@@ -61,7 +63,7 @@
         </div>
     
        <div class="form-buttons">
-        <button id="add-register-button" type="submit">Registrar</button>
+        <button id="add-register-button" type="submit">Cadastrar</button>
         <button id="cancel-register-button" type="button">Cancelar</button>
        </div>
     
@@ -69,11 +71,11 @@
 
       <form id="visit-form">
 
-        <h2 id="form-title">Registro de Visitas</h2>
+        <h2 id="form-title">Cadastro de Visitas</h2>
     
         <div class="form-field">
           <label for="date">Data:</label>
-          <input required type="datetime-local" id="date">
+          <input required type="date" id="date">
         </div>
 
         <div class="form-field">
@@ -93,11 +95,11 @@
     
         <div class="form-field">
           <label for="phone">Telefone:</label>
-          <input required type="tel" id="phone">
+          <input required type="number" id="phone">
         </div>
     
        <div class="form-buttons">
-        <button id="add-visit-button" type="submit">Registrar</button>
+        <button id="add-visit-button" type="submit">Cadastrar</button>
         <button id="cancel-visit-button" type="button">Cancelar</button>
        </div>
     
