@@ -1,8 +1,8 @@
 
 ////// GLOBAL VARIABLES //////
 
-const menuInventory = document.querySelector('#menu-inventory')
-const menuVisit = document.querySelector('#menu-visit')
+let menuInventory = document.querySelector('#menu-inventory')
+let menuVisit = document.querySelector('#menu-visit')
 
 let firstInventoryArrayItem = 0  // FIRST PARAMETER FROM SLICE 
 let inventoryArrayLimiter = 10  // SECOND PARAMETER FROM SLICE
@@ -70,7 +70,7 @@ const displayChosenOptionOnScreen = event => {
     inventoryTitle()
     displayInventoryTHead()
     displayInventoryOnScreen(inventoryItemPerPage())
-    setInitialCurrentPage()
+    setInitialCurrentPage(inventory)
     setInventoryPageQuantity()
     displayInventoryPageNumbers()
   } else {
@@ -78,7 +78,7 @@ const displayChosenOptionOnScreen = event => {
     visitTitle()
     displayVisitTHead()
     displayVisitOnScreen(visitItemPerPage())
-    setInitialCurrentPage()
+    setInitialCurrentPage(inventory)
     setVisitPageQuantity()
     displayVisitPageNumbers()
   }
@@ -129,12 +129,20 @@ const setInitialCurrentPage = () => {
   currentVisitPage = 1
 }
 
-const setInventoryPageQuantity = () => { 
-  inventoryPageQuantity = Math.round((inventory.length + 4) / 10)
+const setInventoryPageQuantity = () => {
+  if (inventory.length === 0) {
+    inventoryPageQuantity = 1
+  } else {
+    inventoryPageQuantity = Math.round((inventory.length + 4) / 10)
+  }
 }
 
 const setVisitPageQuantity = () => {
-  visitPageQuantity = Math.round((visit.length + 4) / 10)
+  if (visit.length === 0) {
+    visitPageQuantity = 1
+  } else {
+    visitPageQuantity = Math.round((visit.length + 4) / 10)
+  }
 }
 
 const displayInventoryPageNumbers = () => {
@@ -282,7 +290,13 @@ const addVisitIntoArray = () => {
   const phone = document.querySelector('#phone').value
   const isNameUsed = visit.find(item => item.name === name)
 
-  if (!isNameUsed) {
+  if (phone.length > 11) {
+    alert('TELEFONE INVÁLIDO. ULTRAPASSOU O LIMITE DE CARACTERES')
+  } else if (phone.length < 10) {
+    alert('TELEFONE INVÁLIDO. DEVE TER O MÍNIMO DE 10 CARACTERES.')
+  } else if (isNameUsed) {
+    alert(`JÁ EXISTE ${name.toUpperCase()} NAS VISITAS`)
+  } else {
     visit.push({
       id: id,
       date: date,
@@ -291,12 +305,9 @@ const addVisitIntoArray = () => {
       responsible: responsible,
       phone: phone,
     })
-
-    visitPageQuantity = setVisitPageQuantity()
-    displayVisitPageNumbers()
+    
     updateVisitLocalStorege()
-  } else {
-    alert(`JÁ EXISTE ${name.toUpperCase()} NAS VISITAS`)
+    closeVisitForm()
   }
 }
 
@@ -305,7 +316,7 @@ const removeVisitItem = id => {
 
   if (response === true) {
     visit = visit.filter(item => item.id != id)
-    visitPageQuantity = setVisitPageQuantity()
+    setVisitPageQuantity()
     handleVisitPageNumberWhenRemovingItem()
     updateVisitLocalStorege()
     displayVisitOnScreen(visitItemPerPage())
@@ -357,8 +368,9 @@ const visitForm = document.querySelector('#visit-form')
 const handleVisitFormSubmit = event => {
   event.preventDefault()
   addVisitIntoArray()
+  setVisitPageQuantity()
   displayVisitOnScreen(visitItemPerPage())
-  closeVisitForm()
+  displayVisitPageNumbers()
 }
 
 visitForm.addEventListener('submit', handleVisitFormSubmit)
@@ -408,9 +420,8 @@ const addItemIntoArray = () => {
       totalPrice: 0
     })
 
-    setInventoryPageQuantity()
     updateInventoryLocalStorege()
-    displayInventoryPageNumbers()
+    closeInventoryForm()
   } else {
     alert(`JÁ EXISTE ${name.toUpperCase()} NO ESTOQUE`)
   }
@@ -454,8 +465,9 @@ const displayInventoryOnScreen = inventory => {
 const handleInventoryFormSubmit = event => {
   event.preventDefault()
   addItemIntoArray()
+  setInventoryPageQuantity()
+  displayInventoryPageNumbers()
   displayInventoryOnScreen(inventoryItemPerPage())
-  closeInventoryForm()
 }
 
 registerForm.addEventListener('submit', handleInventoryFormSubmit)
@@ -498,6 +510,7 @@ const emptyListAlert = () => {
 
   if (itemName === '') {
     alert('OPERAÇÃO NÃO CONCLUÍDA. ADICIONE UM ITEM PRIMEIRO.')
+    closeOperationForm()
   }
 }
 
@@ -523,6 +536,7 @@ const addOperation = (name, date, quantity) => {
       item.modDate = date
       item.quantity += quantity
       item.totalPrice += totalPrice
+      closeOperationForm()
     }
   })
 }
@@ -543,6 +557,7 @@ const withdrawOperation = (name, date, quantity) => {
       item.modDate = date
       item.quantity -= quantity
       item.totalPrice -= totalPrice
+      closeOperationForm()
     } else if (notValidQuantity(item, name, quantity)) {
       alert(`QUANTIDADE DE ${item.name.toUpperCase()} MAIOR QUE O DISPONÍVEL.`)
     }
@@ -562,9 +577,7 @@ const handleOperationsFormSubmit = event => {
   } else {
     withdrawOperation(name, date, quantity)
   }
-
   emptyListAlert()
-  closeOperationForm()
   setInitialOperationColor()
   displayInventoryOnScreen(inventoryItemPerPage())
 }
@@ -633,8 +646,7 @@ const cleanOperationForm = () => operationForm.reset()
 const init = () => {
   inventoryTitle()
   handleMenuOptions(menuInventory, menuVisit)
-  setInitialCurrentPage()
-  setInventoryPageQuantity()
+  setInitialCurrentPage(inventory)
   displayInventoryPageNumbers()
   displayInventoryOnScreen(inventoryItemPerPage())
 }
