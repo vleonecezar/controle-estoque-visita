@@ -86,6 +86,9 @@ const displayChosenOptionOnScreen = event => {
   handleOperationButtonAndInput(chosenOption)
 }
 
+menuInventory.addEventListener('click', displayChosenOptionOnScreen)
+menuVisit.addEventListener('click', displayChosenOptionOnScreen)
+
 const tableHead = document.querySelector('#table-head')
 
 const displayInventoryTHead = () => {
@@ -115,9 +118,6 @@ const title = document.querySelector('#header-title')
 const inventoryTitle = () => title.innerText = 'Páginas do Estoque'
 const visitTitle = () => title.innerText = 'Páginas de Visitas'
 
-menuInventory.addEventListener('click', displayChosenOptionOnScreen)
-menuVisit.addEventListener('click', displayChosenOptionOnScreen)
-
 ////// PAGINATION SETTINGS //////
 
 const setInitialCurrentPage = () => {
@@ -130,7 +130,7 @@ const setInitialCurrentPage = () => {
 }
 
 const setInventoryPageQuantity = () => {
-  if (inventory.length === 0) {
+  if (inventory.length <= 0) {
     inventoryPageQuantity = 1
   } else {
     inventoryPageQuantity = Math.round((inventory.length + 4) / 10)
@@ -249,27 +249,40 @@ nextButton.addEventListener('click', handlePageNumberWhenClicking)
 
 const searchInput = document.querySelector('#search')
 
-const getSearchedItem = name => {
-  const filteredItens = inventory.filter(item => item.name.includes(name))
+const getSearchedItem = (name, array) => {
+  const filteredItens = array.filter(item => item.name.includes(name))
   return filteredItens
 }
 
 const verifySearchFieldAndDisplayOnScreen = () => {
+  const isInventory = menuInventory.style.backgroundColor != 'transparent'
   const searchedItem = searchInput.value.toLowerCase()
-  const searching = getSearchedItem(searchedItem)
+  
 
-  if (searchedItem === '') {
+  if (searchedItem === '' && isInventory) {
     displayInventoryOnScreen(inventoryItemPerPage())
-  } else {
+  } else if (searchedItem != '' && isInventory) {
+    const searching = getSearchedItem(searchedItem, inventory)
     displayInventoryOnScreen(searching)
+  } else if (searchedItem === '' && !isInventory) {
+    displayVisitOnScreen(visitItemPerPage())
+  } else if (searchedItem != '' && !isInventory) {
+    const searching = getSearchedItem(searchedItem, visit)
+    displayVisitOnScreen(searching)
   }
 }
 
 searchInput.addEventListener('keyup', verifySearchFieldAndDisplayOnScreen)
 
 const cleanSearchInput = () => {
+  const isInventory = menuInventory.style.backgroundColor != 'transparent'
+  
   searchInput.value = ''
-  displayInventoryOnScreen(inventoryItemPerPage())
+  if (isInventory) {
+    displayInventoryOnScreen(inventoryItemPerPage())
+  } else {
+    displayVisitOnScreen(visitItemPerPage())
+  }
 }
 
 searchInput.addEventListener('blur', cleanSearchInput)
@@ -295,7 +308,7 @@ const addVisitIntoArray = () => {
   } else if (phone.length < 10) {
     alert('TELEFONE INVÁLIDO. DEVE TER O MÍNIMO DE 10 CARACTERES.')
   } else if (isNameUsed) {
-    alert(`JÁ EXISTE ${name.toUpperCase()} NAS VISITAS`)
+    alert(`JÁ EXISTE " ${name.toUpperCase()} " NAS VISITAS`)
   } else {
     visit.push({
       id: id,
@@ -305,9 +318,9 @@ const addVisitIntoArray = () => {
       responsible: responsible,
       phone: phone,
     })
-    
-    updateVisitLocalStorege()
+
     closeVisitForm()
+    updateVisitLocalStorege()
   }
 }
 
@@ -423,7 +436,8 @@ const addItemIntoArray = () => {
     updateInventoryLocalStorege()
     closeInventoryForm()
   } else {
-    alert(`JÁ EXISTE ${name.toUpperCase()} NO ESTOQUE`)
+    alert(`JÁ EXISTE " ${name.toUpperCase()} " NO ESTOQUE`)
+    openInventoryOrVisitForm()
   }
 }
 
@@ -506,12 +520,7 @@ const fillNamesOptions = () => {
 }
 
 const emptyListAlert = () => {
-  const itemName = document.querySelector('#operation-item-name').value
-
-  if (itemName === '') {
-    alert('OPERAÇÃO NÃO CONCLUÍDA. ADICIONE UM ITEM PRIMEIRO.')
-    closeOperationForm()
-  }
+  
 }
 
 const setInitialOperationColor = () => operations.style.color = 'green'
@@ -557,9 +566,12 @@ const withdrawOperation = (name, date, quantity) => {
       item.modDate = date
       item.quantity -= quantity
       item.totalPrice -= totalPrice
+      setInitialOperationColor()
       closeOperationForm()
     } else if (notValidQuantity(item, name, quantity)) {
-      alert(`QUANTIDADE DE ${item.name.toUpperCase()} MAIOR QUE O DISPONÍVEL.`)
+      alert(
+        `QUANTIDADE DE " ${item.name.toUpperCase()} " É MAIOR QUE A DISPONÍVEL.`
+      )
     }
 
   })
@@ -572,29 +584,27 @@ const handleOperationsFormSubmit = event => {
   const quantity = Number(document.querySelector('#quantity').value)
   const date = getDate()
 
-  if (operation === 'add') {
+  if (name === '') {
+    alert('OPERAÇÃO NÃO CONCLUÍDA. ADICIONE UM ITEM PRIMEIRO.')
+    closeOperationForm()
+  } else if (operation === 'add'){
     addOperation(name, date, quantity)
   } else {
     withdrawOperation(name, date, quantity)
   }
-  emptyListAlert()
-  setInitialOperationColor()
+
   displayInventoryOnScreen(inventoryItemPerPage())
 }
 
 operationForm.addEventListener('submit', handleOperationsFormSubmit)
 
 const displayButtonAndInputOnScreen = button => {
-  searchInput.style.display = 'initial'
-  document.querySelector('.search-insert').style.justifyContent = 'space-between'
-  document.querySelector('#search-icon').style.display = 'initial'
+  document.querySelector('#register-button').style.marginRight = 'inital'
   button.style.display = 'initial'
 }
 
 const hideButtonAndInputOnScreen = button => {
-  searchInput.style.display = 'none'
-  document.querySelector('.search-insert').style.justifyContent = 'center'
-  document.querySelector('#search-icon').style.display = 'none'
+  document.querySelector('#register-button').style.marginRight = '100px'
   button.style.display = 'none'
 }
 
@@ -643,12 +653,4 @@ const cleanOperationForm = () => operationForm.reset()
 
 ////// INIT //////
 
-const init = () => {
-  inventoryTitle()
-  handleMenuOptions(menuInventory, menuVisit)
-  setInitialCurrentPage(inventory)
-  displayInventoryPageNumbers()
-  displayInventoryOnScreen(inventoryItemPerPage())
-}
-
-init()
+menuInventory.click()
