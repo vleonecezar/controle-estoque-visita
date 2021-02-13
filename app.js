@@ -275,14 +275,20 @@ const verifySearchFieldAndDisplayOnScreen = () => {
 searchInput.addEventListener('keyup', verifySearchFieldAndDisplayOnScreen)
 
 const cleanSearchInput = () => {
-  const isInventory = menuInventory.style.backgroundColor != 'transparent'
-  
-  searchInput.value = ''
-  if (isInventory) {
-    displayInventoryOnScreen(inventoryItemPerPage())
-  } else {
-    displayVisitOnScreen(visitItemPerPage())
-  }
+  //This setTimeout prevents showing the previous screen before going
+  //to the next one if you change the page in the middle of the search. 
+  setTimeout(() => { 
+
+    const isInventory = menuInventory.style.backgroundColor != 'transparent'
+    searchInput.value = ''
+
+    if (isInventory) {
+      displayInventoryOnScreen(inventoryItemPerPage())
+    } else {
+      displayVisitOnScreen(visitItemPerPage())
+    }
+
+  }, 100);
 }
 
 searchInput.addEventListener('blur', cleanSearchInput)
@@ -493,7 +499,8 @@ const operationForm = document.querySelector('#operation-form')
 
 const openOperationsForm = () => {
   cleanOperationForm()
-  fillNamesOptions()
+  fillNamesIfAddOption()
+
   operationForm.style.display = 'inherit'
 }
 
@@ -508,7 +515,19 @@ const closeOperationForm = () => {
 document.querySelector('#cancel-operations-button')
   .addEventListener('click', closeOperationForm)
 
-const fillNamesOptions = () => {
+const fillNamesIfWithdrawOption = () => {
+  const itemsNames = document.querySelector('#operation-item-name')
+  const positiveQuantity = inventory.filter( item => item.quantity > 0)
+  itemsNames.innerHTML = ''
+
+  positiveQuantity.forEach(({ name }) => {
+    itemsNames.innerHTML += `
+      <option id="option-name" value="${name}">${name}</option>
+    `
+  })
+}
+
+const fillNamesIfAddOption = () => {
   const itemsNames = document.querySelector('#operation-item-name')
   itemsNames.innerHTML = ''
 
@@ -519,10 +538,6 @@ const fillNamesOptions = () => {
   })
 }
 
-const emptyListAlert = () => {
-  
-}
-
 const setInitialOperationColor = () => operations.style.color = 'green'
 
 const handleOperationColor = event => {
@@ -530,8 +545,10 @@ const handleOperationColor = event => {
 
   if (operationName === 'add') {
     operations.style.color = 'green'
+    fillNamesIfAddOption()
   } else {
     operations.style.color = 'red'
+    fillNamesIfWithdrawOption()
   }
 }
 
@@ -585,7 +602,7 @@ const handleOperationsFormSubmit = event => {
   const date = getDate()
 
   if (name === '') {
-    alert('OPERAÇÃO NÃO CONCLUÍDA. ADICIONE UM ITEM PRIMEIRO.')
+    alert('OPERAÇÃO NÃO CONCLUÍDA. ITEM NÃO CADASTRADO OU QUANTIDADE INSUFICIENTE.')
     closeOperationForm()
   } else if (operation === 'add'){
     addOperation(name, date, quantity)
