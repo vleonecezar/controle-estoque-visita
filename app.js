@@ -62,32 +62,9 @@ const handleMenuOptions = (chosen, notChosen) => {
   notChosenOptionStyle(notChosen)
 }
 
-const displayChosenOptionOnScreen = event => {
-  const chosenOption = event.target.id
-
-  if (chosenOption === 'menu-inventory') {
-    handleMenuOptions(menuInventory, menuVisit)
-    inventoryTitle()
-    displayInventoryTHead()
-    displayInventoryOnScreen(inventoryItemPerPage())
-    setInitialCurrentPage(inventory)
-    setInventoryPageQuantity()
-    displayInventoryPageNumbers()
-  } else {
-    handleMenuOptions(menuVisit, menuInventory)
-    visitTitle()
-    displayVisitTHead()
-    displayVisitOnScreen(visitItemPerPage())
-    setInitialCurrentPage(inventory)
-    setVisitPageQuantity()
-    displayVisitPageNumbers()
-  }
-
-  handleOperationButtonAndInput(chosenOption)
-}
-
-menuInventory.addEventListener('click', displayChosenOptionOnScreen)
-menuVisit.addEventListener('click', displayChosenOptionOnScreen)
+const title = document.querySelector('#header-title')
+const inventoryTitle = () => title.innerText = 'Páginas do Estoque'
+const visitTitle = () => title.innerText = 'Páginas das Visitas'
 
 const tableHead = document.querySelector('#table-head')
 
@@ -114,9 +91,32 @@ const displayVisitTHead = () => {
   `
 }
 
-const title = document.querySelector('#header-title')
-const inventoryTitle = () => title.innerText = 'Páginas do Estoque'
-const visitTitle = () => title.innerText = 'Páginas de Visitas'
+const displayChosenOptionOnScreen = event => {
+  const chosenOption = event.target.id
+
+  if (chosenOption === 'menu-inventory') {
+    handleMenuOptions(menuInventory, menuVisit)
+    inventoryTitle()
+    displayInventoryTHead()
+    displayInventoryOnScreen(inventoryItemPerPage())
+    setInitialCurrentPage(inventory)
+    setInventoryPageQuantity()
+    displayInventoryPageNumbers()
+  } else {
+    handleMenuOptions(menuVisit, menuInventory)
+    visitTitle()
+    displayVisitTHead()
+    displayVisitOnScreen(visitItemPerPage())
+    setInitialCurrentPage(inventory)
+    setVisitPageQuantity()
+    displayVisitPageNumbers()
+  }
+
+  handleOperationButton(chosenOption)
+}
+
+menuInventory.addEventListener('click', displayChosenOptionOnScreen)
+menuVisit.addEventListener('click', displayChosenOptionOnScreen)
 
 ////// PAGINATION SETTINGS //////
 
@@ -191,7 +191,7 @@ const handleVisitPageNumberWhenRemovingItem = () => {
   displayVisitPageNumbers()
 }
 
-const handleInventoryPageNumberWhenClicking = event => {
+const handleInventoryPageNumberWhenSwitchPage = event => {
   const eventID = event.target.id
   const previous = eventID === 'previous' && inventoryArrayLimiter > 10
   const next = eventID === 'next' && inventoryArrayLimiter < inventory.length
@@ -210,7 +210,7 @@ const handleInventoryPageNumberWhenClicking = event => {
   displayInventoryPageNumbers()
 }
 
-const handleVisitPageNumberWhenClicking = event => {
+const handleVisitPageNumberWhenSwitchPage = event => {
   const eventID = event.target.id
   const previous = eventID === 'previous' && visitArrayLimiter > 10
   const next = eventID === 'next' && visitArrayLimiter < visit.length
@@ -229,21 +229,21 @@ const handleVisitPageNumberWhenClicking = event => {
   displayVisitPageNumbers()
 }
 
-const handlePageNumberWhenClicking = event => {
+const handlePageNumberWhenSwitchPage = event => {
   const isInventory = menuInventory.style.backgroundColor != 'transparent'
 
   if (isInventory) {
-    handleInventoryPageNumberWhenClicking(event)
+    handleInventoryPageNumberWhenSwitchPage(event)
   } else {
-    handleVisitPageNumberWhenClicking(event)
+    handleVisitPageNumberWhenSwitchPage(event)
   }
 }
 
 const previousButton = document.querySelector('#previous')
 const nextButton = document.querySelector('#next')
 
-previousButton.addEventListener('click', handlePageNumberWhenClicking)
-nextButton.addEventListener('click', handlePageNumberWhenClicking)
+previousButton.addEventListener('click', handlePageNumberWhenSwitchPage)
+nextButton.addEventListener('click', handlePageNumberWhenSwitchPage)
 
 ////// SEARCH //////
 
@@ -293,130 +293,35 @@ const cleanSearchInput = () => {
 
 searchInput.addEventListener('blur', cleanSearchInput)
 
-////// VISIT FORM //////
-
-const closeVisitForm = () => visitForm.style.display = 'none'
-
-document.querySelector('#cancel-visit-button')
-  .addEventListener('click', closeVisitForm)
-
-const addVisitIntoArray = () => {
-  const id = isUniqueID(visit)
-  const date = document.querySelector('#date').value
-  const name = document.querySelector('#visit-name').value.toLowerCase()
-  const adress = document.querySelector('#adress').value
-  const responsible = document.querySelector('#responsible').value
-  const phone = document.querySelector('#phone').value
-  const isNameUsed = visit.find(item => item.name === name)
-
-  if (phone.length > 11) {
-    alert('TELEFONE INVÁLIDO. ULTRAPASSOU O LIMITE DE CARACTERES')
-  } else if (phone.length < 10) {
-    alert('TELEFONE INVÁLIDO. DEVE TER O MÍNIMO DE 10 CARACTERES.')
-  } else if (isNameUsed) {
-    alert(`JÁ EXISTE " ${name.toUpperCase()} " NAS VISITAS`)
-  } else {
-    visit.push({
-      id: id,
-      date: date,
-      name: name,
-      adress: adress,
-      responsible: responsible,
-      phone: phone,
-    })
-
-    closeVisitForm()
-    updateVisitLocalStorege()
-  }
-}
-
-const removeVisitItem = id => {
-  const response = confirm('TEM CERTEZA QUE DESEJA DELETAR?')
-
-  if (response === true) {
-    visit = visit.filter(item => item.id != id)
-    setVisitPageQuantity()
-    handleVisitPageNumberWhenRemovingItem()
-    updateVisitLocalStorege()
-    displayVisitOnScreen(visitItemPerPage())
-  }
-}
-
-const formatingPhoneNumber = (phoneNumber) => {
-  let ddd = phoneNumber.slice(0,2)
-  let partA = 0
-  let partB = 0
-  let isCellPhone = phoneNumber.length === 11
-  let notCellPhone = phoneNumber.length === 10
-
-  if(isCellPhone) {
-    partA = phoneNumber.slice(2, 7)
-    partB = phoneNumber.slice(7)
-  } else if (notCellPhone) {
-    partA = phoneNumber.slice(2, 6)
-    partB = phoneNumber.slice(6)
-  }
-  
-  return `(${ddd}) ${partA}-${partB}`
-}
-
-const displayVisitOnScreen = visit => {
-  const itemsList = document.querySelector('#itens-list')
-  itemsList.innerHTML = ''
-
-  visit.forEach(item => {
-    itemsList.innerHTML += `
-      <tr id='${item.id}'>
-        <td>${item.date}</td>
-        <td id="item-name">${item.name}</td>
-        <td>${item.adress}</td>
-        <td>${item.responsible}</td>
-        <td>${formatingPhoneNumber(item.phone)}</td>
-        <td>
-          <button id="trash" type="button" onClick="removeVisitItem( ${item.id} )">
-            <i class="fas fa-trash"></i>
-          </button>
-        </td>
-      </tr>
-    `
-  })
-}
-
-const visitForm = document.querySelector('#visit-form')
-
-const handleVisitFormSubmit = event => {
-  event.preventDefault()
-  addVisitIntoArray()
-  setVisitPageQuantity()
-  displayVisitOnScreen(visitItemPerPage())
-  displayVisitPageNumbers()
-}
-
-visitForm.addEventListener('submit', handleVisitFormSubmit)
-
 ////// INVENTORY FORM //////
 
 const registerForm = document.querySelector('#register-form')
 
+//Open Visit form is here as well and that's why we don't find 'open visit form' on visit section.
 const openInventoryOrVisitForm = () => {
   const inputName = document.querySelector('#name')
   const isInventory = menuInventory.style.backgroundColor != 'transparent'
 
   if (isInventory) {
-    //cleanInventoryForm()
     registerForm.style.display = 'inherit'
   } else {
-    //cleanVisitForm()
     visitForm.style.display = 'inherit'
   }
 
   inputName.focus()
 }
 
+const cleanInventoryForm = () => registerForm.reset()
+
+const cleanVisitForm = () => visitForm.reset()
+
 document.querySelector('#register-button')
   .addEventListener('click', openInventoryOrVisitForm)
 
-const closeInventoryForm = () => registerForm.style.display = 'none'
+const closeInventoryForm = () => {
+  registerForm.style.display = 'none'
+  cleanInventoryForm()
+}
 
 document.querySelector('#cancel-register-button')
   .addEventListener('click', closeInventoryForm)
@@ -492,51 +397,167 @@ const handleInventoryFormSubmit = event => {
 
 registerForm.addEventListener('submit', handleInventoryFormSubmit)
 
+////// VISIT FORM //////
+
+const closeVisitForm = () => {
+  visitForm.style.display = 'none'
+  cleanVisitForm()
+}
+
+document.querySelector('#cancel-visit-button')
+  .addEventListener('click', closeVisitForm)
+
+const addVisitIntoArray = () => {
+  const id = isUniqueID(visit)
+  const date = document.querySelector('#date').value
+  const name = document.querySelector('#visit-name').value.toLowerCase()
+  const adress = document.querySelector('#adress').value
+  const responsible = document.querySelector('#responsible').value
+  const phone = document.querySelector('#phone').value
+  const isNameUsed = visit.find(item => item.name === name)
+
+  if (phone.length > 11) {
+    alert('TELEFONE INVÁLIDO. ULTRAPASSOU O LIMITE DE CARACTERES')
+  } else if (phone.length < 10) {
+    alert('TELEFONE INVÁLIDO. DEVE TER O MÍNIMO DE 10 CARACTERES.')
+  } else if (isNameUsed) {
+    alert(`JÁ EXISTE " ${name.toUpperCase()} " NAS VISITAS`)
+  } else {
+    visit.push({
+      id: id,
+      date: date,
+      name: name,
+      adress: adress,
+      responsible: responsible,
+      phone: phone,
+    })
+
+    closeVisitForm()
+    updateVisitLocalStorege()
+  }
+}
+
+const removeVisitItem = id => {
+  const response = confirm('TEM CERTEZA QUE DESEJA DELETAR?')
+
+  if (response === true) {
+    visit = visit.filter(item => item.id != id)
+    setVisitPageQuantity()
+    handleVisitPageNumberWhenRemovingItem()
+    updateVisitLocalStorege()
+    displayVisitOnScreen(visitItemPerPage())
+  }
+}
+
+const formatingPhoneNumber = (phoneNumber) => {
+  const ddd = phoneNumber.slice(0,2)
+  let partA = 0
+  let partB = 0
+  const isCellPhone = phoneNumber.length === 11
+  const notCellPhone = phoneNumber.length === 10
+
+  if(isCellPhone) {
+    partA = phoneNumber.slice(2, 7)
+    partB = phoneNumber.slice(7)
+  } else if (notCellPhone) {
+    partA = phoneNumber.slice(2, 6)
+    partB = phoneNumber.slice(6)
+  }
+  
+  return `(${ddd}) ${partA}-${partB}`
+}
+
+const displayVisitOnScreen = visit => {
+  const itemsList = document.querySelector('#itens-list')
+  itemsList.innerHTML = ''
+
+  visit.forEach(item => {
+    itemsList.innerHTML += `
+      <tr id='${item.id}'>
+        <td>${item.date}</td>
+        <td id="item-name">${item.name}</td>
+        <td>${item.adress}</td>
+        <td>${item.responsible}</td>
+        <td>${formatingPhoneNumber(item.phone)}</td>
+        <td>
+          <button id="trash" type="button" onClick="removeVisitItem( ${item.id} )">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    `
+  })
+}
+
+const handleVisitFormSubmit = event => {
+  event.preventDefault()
+  addVisitIntoArray()
+  setVisitPageQuantity()
+  displayVisitOnScreen(visitItemPerPage())
+  displayVisitPageNumbers()
+}
+
+const visitForm = document.querySelector('#visit-form')
+visitForm.addEventListener('submit', handleVisitFormSubmit)
+
 ////// OPERATION FORM //////
 
 const operations = document.querySelector('#operations')
 const operationForm = document.querySelector('#operation-form')
 
 const openOperationsForm = () => {
-  cleanOperationForm()
-  fillNamesIfAddOption()
-
+  fillNamesIfAddOperation()
   operationForm.style.display = 'inherit'
 }
+
+const cleanOperationForm = () => operationForm.reset()
 
 const operationButton = document.querySelector('#operation-button')
 operationButton.addEventListener('click', openOperationsForm)
 
 const closeOperationForm = () => {
   operationForm.style.display = 'none'
+  cleanOperationForm()
   setInitialOperationColor()
 }
 
 document.querySelector('#cancel-operations-button')
   .addEventListener('click', closeOperationForm)
 
-const fillNamesIfWithdrawOption = () => {
+const fillNamesIfAddOperation = () => {
+  const itemsNames = document.querySelector('#operation-item-name')
+  itemsNames.innerHTML = ''
+
+  inventory.forEach(({ name }) => {
+    itemsNames.innerHTML += `
+      <option value="${name}">${name}</option>
+    `
+  })
+}
+
+const fillNamesIfWithdrawOperation = () => {
   const itemsNames = document.querySelector('#operation-item-name')
   const positiveQuantity = inventory.filter( item => item.quantity > 0)
   itemsNames.innerHTML = ''
 
   positiveQuantity.forEach(({ name }) => {
     itemsNames.innerHTML += `
-      <option id="option-name" value="${name}">${name}</option>
+      <option value="${name}">${name}</option>
     `
   })
 }
 
-const fillNamesIfAddOption = () => {
-  const itemsNames = document.querySelector('#operation-item-name')
-  itemsNames.innerHTML = ''
+const fillOptionsNames = event => {
+  const operationName = event.target.value
 
-  inventory.forEach(({ name }) => {
-    itemsNames.innerHTML += `
-      <option id="option-name" value="${name}">${name}</option>
-    `
-  })
+  if (operationName === 'add') {
+    fillNamesIfAddOperation()
+  } else {
+    fillNamesIfWithdrawOperation()
+  }
 }
+
+operations.addEventListener('change', fillOptionsNames)
 
 const setInitialOperationColor = () => operations.style.color = 'green'
 
@@ -545,10 +566,8 @@ const handleOperationColor = event => {
 
   if (operationName === 'add') {
     operations.style.color = 'green'
-    fillNamesIfAddOption()
   } else {
     operations.style.color = 'red'
-    fillNamesIfWithdrawOption()
   }
 }
 
@@ -610,26 +629,31 @@ const handleOperationsFormSubmit = event => {
     withdrawOperation(name, date, quantity)
   }
 
+  updateInventoryLocalStorege()
   displayInventoryOnScreen(inventoryItemPerPage())
 }
 
 operationForm.addEventListener('submit', handleOperationsFormSubmit)
 
-const displayButtonAndInputOnScreen = button => {
+const displayButtonOnScreen = button => {
+  //change position of register button
   document.querySelector('#register-button').style.marginRight = 'inital'
+  //display operations button
   button.style.display = 'initial'
 }
 
-const hideButtonAndInputOnScreen = button => {
+const hideButtonOnScreen = button => {
+  //change position of register button
   document.querySelector('#register-button').style.marginRight = '100px'
+  //hide operations button
   button.style.display = 'none'
 }
 
-const handleOperationButtonAndInput = menu => {
+const handleOperationButton = menu => {
   if (menu === 'menu-inventory') {
-    displayButtonAndInputOnScreen(operationButton)
+    displayButtonOnScreen(operationButton)
   } else {
-    hideButtonAndInputOnScreen(operationButton)
+    hideButtonOnScreen(operationButton)
   }
 }
 
@@ -663,10 +687,6 @@ const setCurrency = price => (
   Number(price)
     .toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
 )
-
-const cleanInventoryForm = () => registerForm.reset()
-const cleanVisitForm = () => visitForm.reset()
-const cleanOperationForm = () => operationForm.reset()
 
 ////// INIT //////
 
