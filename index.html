@@ -33,21 +33,18 @@
       <div class="search-insert">
         
         <div class="input-container">
-
           <i id="search-icon" class="fas fa-search"></i>
           <input type="search" id="search" placeholder="Pesquise pelo nome">
-
         </div>
 
         <div>
-
           <button type="button" id="register-button"><i class="fas fa-plus-square"></i> Cadastrar</button>
           <button type="button" id="operation-button"><i class="fas fa-tasks"></i> Gerenciar</button>
-          
         </div>
 
       </div>
 
+      <!-- INVENTORY FORM -->
       <form id="register-form">
 
         <h2 id="form-title">Cadastro de Item</h2>
@@ -69,6 +66,7 @@
     
       </form>
 
+      <!-- VISIT FORM -->
       <form id="visit-form">
 
         <h2 id="form-title">Cadastro de Visitas</h2>
@@ -105,26 +103,23 @@
     
       </form>
 
+      <!-- OPERATION FORM -->
       <form id="operation-form">
 
         <h2 id="form-title">Operação</h2>
 
         <div id="operation-field" class="form-field">
-          
           <label for="operations">Escolha a operação:</label>
           <select name="operations" id="operations">
           <option id="add" value="add">ADICIONAR</option>
           <option id="withdraw" value="withdraw">RETIRAR</option>
           </select>
-
         </div>
 
         <div class="form-field">
-          
           <label for="operation-item-name">Nome:</label>
           <select name="operation" id="operation-item-name">
           </select>
-
         </div>
     
         <div id="quantity-field" class="form-field">
@@ -151,10 +146,7 @@
           <th id="actions">Ações</th>
         </thead>
 
-        <tbody id="itens-list">
-
-          
-        </tbody>
+        <tbody id="itens-list"></tbody>
 
       </table>
   
