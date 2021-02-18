@@ -45,7 +45,7 @@ const updateVisitLocalStorege = () => {
 
 const chosenOptionStyle = option => {
   option.style.backgroundColor = 'rgb(231, 231, 231)'
-  option.style.marginRight = '-0.5px'
+  option.style.marginRight = '-1px'
   option.style.borderTop = '1px solid rgba(0, 0, 0, 0.199)'
   option.style.borderBottom = '1px solid rgba(0, 0, 0, 0.199)'
 }
@@ -373,7 +373,7 @@ const displayInventoryOnScreen = inventory => {
       <tr id='${item.id}'>
         <td>${item.date}</td>
         <td>${item.modDate}</td>
-        <td id="item-name">${item.name}</td>
+        <td class="item-name-style">${item.name}</td>
         <td>${item.quantity}</td>
         <td>${setCurrency(item.price)}</td>
         <td>${setCurrency(item.totalPrice)}</td>
@@ -409,7 +409,8 @@ document.querySelector('#cancel-visit-button')
 
 const addVisitIntoArray = () => {
   const id = isUniqueID(visit)
-  const date = document.querySelector('#date').value
+  const dateValue = document.querySelector('#date').value
+  const date = getDate(dateValue)
   const name = document.querySelector('#visit-name').value.toLowerCase()
   const adress = document.querySelector('#adress').value
   const responsible = document.querySelector('#responsible').value
@@ -475,9 +476,9 @@ const displayVisitOnScreen = visit => {
     itemsList.innerHTML += `
       <tr id='${item.id}'>
         <td>${item.date}</td>
-        <td id="item-name">${item.name}</td>
-        <td>${item.adress}</td>
-        <td>${item.responsible}</td>
+        <td class="item-name-style">${item.name}</td>
+        <td class="item-name-style">${item.adress}</td>
+        <td class="item-name-style">${item.responsible}</td>
         <td>${formatingPhoneNumber(item.phone)}</td>
         <td>
           <button id="trash" type="button" onClick="removeVisitItem( ${item.id} )">
@@ -530,7 +531,7 @@ const fillNamesIfAddOperation = () => {
 
   inventory.forEach(({ name }) => {
     itemsNames.innerHTML += `
-      <option value="${name}">${name}</option>
+      <option class="item-name-style" value="${name}">${name}</option>
     `
   })
 }
@@ -542,7 +543,7 @@ const fillNamesIfWithdrawOperation = () => {
 
   positiveQuantity.forEach(({ name }) => {
     itemsNames.innerHTML += `
-      <option value="${name}">${name}</option>
+      <option class="item-name-style" value="${name}">${name}</option>
     `
   })
 }
@@ -673,14 +674,22 @@ const isUniqueID = array => {
   return id
 }
 
-const getDate = () => {
-  const date = new Date()
+const getDate = formValue => {
+  const isInventory = menuInventory.style.backgroundColor != 'transparent'
 
-  return `
+  if(isInventory) {
+    const date = new Date()
+    return `
     ${date.getDate()} /
-    ${date.getUTCMonth() + 1} /
+    0${date.getUTCMonth() + 1} /
     ${date.getFullYear()}
   `
+  } else {
+    const dd = formValue.slice(8)
+    const mm = formValue.slice(5, 7)
+    const yyyy = formValue.slice(0, 4)
+    return `${dd} / ${mm} / ${yyyy}`
+  }
 }
 
 const setCurrency = price => (
