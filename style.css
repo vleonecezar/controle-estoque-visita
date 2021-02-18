@@ -131,7 +131,7 @@ header {
 
 form {
   position: fixed;
-  left: 35%;
+  left: 37%;
   top: 30%;
   background-color: #fff;
   border: 1px solid black;
@@ -197,7 +197,7 @@ tbody {
   background-color: #fff;
 }
 
-#item-name, #operation-item-name {
+.item-name-style {
   text-transform: capitalize;
 }
 
