@@ -32,3 +32,29 @@ Por não haver um backend e banco de dados, as informações são adicionadas no
 -   JavaScript
 
 ---
+
+## 🎨 Screens
+
+### Estoque
+
+<p align="center" style="display: flex; align-items: flex-start; justify-content: center;">
+  <img alt="estoque" src="./src/assets/readme/estoque.jpg" width="400px">
+</p>
+
+<p align="center" style="display: flex; align-items: flex-start; justify-content: center;">
+  <img alt="estoque" src="./src/assets/readme/cadastro_estoque.jpg" width="400px">
+</p>
+
+<p align="center" style="display: flex; align-items: flex-start; justify-content: center;">
+  <img alt="estoque" src="./src/assets/readme/gerenciar_estoque.jpg" width="400px">
+</p>
+
+### Visitas
+
+<p align="center" style="display: flex; align-items: flex-start; justify-content: center;">
+  <img alt="estoque" src="./src/assets/readme/visaitas.jpg" width="400px">
+</p>
+
+<p align="center" style="display: flex; align-items: flex-start; justify-content: center;">
+  <img alt="estoque" src="./src/assets/readme/cadastro_visitas.jpg" width="400px">
+</p>
