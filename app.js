@@ -91,8 +91,8 @@ const displayVisitTHead = () => {
   `
 }
 
-const displayChosenOptionOnScreen = event => {
-  const chosenOption = event.target.id
+const displayChosenOptionOnScreen = e => {
+  const chosenOption = e.target.id
 
   if (chosenOption === 'menu-inventory') {
     handleMenuOptions(menuInventory, menuVisit)
@@ -191,8 +191,8 @@ const handleVisitPageNumberWhenRemovingItem = () => {
   displayVisitPageNumbers()
 }
 
-const handleInventoryPageNumberWhenSwitchPage = event => {
-  const eventID = event.target.id
+const handleInventoryPageNumberWhenSwitchPage = e => {
+  const eventID = e.target.id
   const previous = eventID === 'previous' && inventoryArrayLimiter > 10
   const next = eventID === 'next' && inventoryArrayLimiter < inventory.length
 
@@ -210,8 +210,8 @@ const handleInventoryPageNumberWhenSwitchPage = event => {
   displayInventoryPageNumbers()
 }
 
-const handleVisitPageNumberWhenSwitchPage = event => {
-  const eventID = event.target.id
+const handleVisitPageNumberWhenSwitchPage = e => {
+  const eventID = e.target.id
   const previous = eventID === 'previous' && visitArrayLimiter > 10
   const next = eventID === 'next' && visitArrayLimiter < visit.length
 
@@ -229,13 +229,13 @@ const handleVisitPageNumberWhenSwitchPage = event => {
   displayVisitPageNumbers()
 }
 
-const handlePageNumberWhenSwitchPage = event => {
+const handlePageNumberWhenSwitchPage = e => {
   const isInventory = menuInventory.style.backgroundColor != 'transparent'
 
   if (isInventory) {
-    handleInventoryPageNumberWhenSwitchPage(event)
+    handleInventoryPageNumberWhenSwitchPage(e)
   } else {
-    handleVisitPageNumberWhenSwitchPage(event)
+    handleVisitPageNumberWhenSwitchPage(e)
   }
 }
 
@@ -387,8 +387,8 @@ const displayInventoryOnScreen = inventory => {
   })
 }
 
-const handleInventoryFormSubmit = event => {
-  event.preventDefault()
+const handleInventoryFormSubmit = e => {
+  e.preventDefault()
   addItemIntoArray()
   setInventoryPageQuantity()
   displayInventoryPageNumbers()
@@ -490,8 +490,8 @@ const displayVisitOnScreen = visit => {
   })
 }
 
-const handleVisitFormSubmit = event => {
-  event.preventDefault()
+const handleVisitFormSubmit = e => {
+  e.preventDefault()
   addVisitIntoArray()
   setVisitPageQuantity()
   displayVisitOnScreen(visitItemPerPage())
@@ -548,8 +548,8 @@ const fillNamesIfWithdrawOperation = () => {
   })
 }
 
-const fillOptionsNames = event => {
-  const operationName = event.target.value
+const fillOptionsNames = e => {
+  const operationName = e.target.value
 
   if (operationName === 'add') {
     fillNamesIfAddOperation()
@@ -562,8 +562,8 @@ operations.addEventListener('change', fillOptionsNames)
 
 const setInitialOperationColor = () => operations.style.color = 'green'
 
-const handleOperationColor = event => {
-  const operationName = event.target.value
+const handleOperationColor = e => {
+  const operationName = e.target.value
 
   if (operationName === 'add') {
     operations.style.color = 'green'
@@ -614,8 +614,8 @@ const withdrawOperation = (name, date, quantity) => {
   })
 }
 
-const handleOperationsFormSubmit = event => {
-  event.preventDefault()
+const handleOperationsFormSubmit = e => {
+  e.preventDefault()
   const operation = document.querySelector('#operations').value
   const name = document.querySelector('#operation-item-name').value
   const quantity = Number(document.querySelector('#quantity').value)
