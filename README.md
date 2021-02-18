@@ -38,15 +38,15 @@ Por não haver um backend e banco de dados, as informações são adicionadas no
 ### Estoque
 
 <p align="center" style="display: flex; align-items: flex-start; justify-content: center;">
-  <img alt="estoque" src="./src/assets/readme/estoque.jpg" width="400px">
+  <img alt="estoque" src="./assets/readme/estoque.jpg" width="400px">
 </p>
 
 <p align="center" style="display: flex; align-items: flex-start; justify-content: center;">
-  <img alt="estoque" src="./src/assets/readme/cadastro_estoque.jpg" width="400px">
+  <img alt="estoque" src="./assets/readme/cadastro_estoque.jpg" width="400px">
 </p>
 
 <p align="center" style="display: flex; align-items: flex-start; justify-content: center;">
-  <img alt="estoque" src="./src/assets/readme/gerenciar_estoque.jpg" width="400px">
+  <img alt="estoque" src="./assets/readme/gerenciar_estoque.jpg" width="400px">
 </p>
 
 ### Visitas
@@ -56,5 +56,5 @@ Por não haver um backend e banco de dados, as informações são adicionadas no
 </p>
 
 <p align="center" style="display: flex; align-items: flex-start; justify-content: center;">
-  <img alt="estoque" src="./src/assets/readme/cadastro_visitas.jpg" width="400px">
+  <img alt="estoque" src="./assets/readme/cadastro_visitas.jpg" width="400px">
 </p>
