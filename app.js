@@ -674,7 +674,7 @@ const isUniqueID = array => {
   return id
 }
 
-const getDate = formValue => {
+const getDate = dateValue => {
   const isInventory = menuInventory.style.backgroundColor != 'transparent'
 
   if(isInventory) {
@@ -685,9 +685,9 @@ const getDate = formValue => {
     ${date.getFullYear()}
   `
   } else {
-    const dd = formValue.slice(8)
-    const mm = formValue.slice(5, 7)
-    const yyyy = formValue.slice(0, 4)
+    const dd = dateValue.slice(8)
+    const mm = dateValue.slice(5, 7)
+    const yyyy = dateValue.slice(0, 4)
     return `${dd} / ${mm} / ${yyyy}`
   }
 }
