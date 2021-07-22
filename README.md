@@ -17,7 +17,7 @@ Todos os itens de ambas as opções podem ser deletados clicando na lixeira da c
 
 As informações são adicionadas no localStorage, sendo assim persistindo mesmo que a pagina seja fechada ou recarregada.
 
-Link para teste: https://vleonecezar.github.io/controle-estoque-visita/
+<a href="https://vleonecezar.github.io/controle-estoque-visita/">CLIQUE AQUI PRA TESTAR</a>
 
 ---
 
