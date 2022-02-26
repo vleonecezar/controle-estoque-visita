@@ -1,7 +1,7 @@
 # Controle de Estoque e Visitas 🧰
 
 <div style="text-align: justify;">
-Uma aplicação de gerenciamento de estoque e visitas.
+Aplicação de controle de estoque e visitas.
 </div>
 
 ## ⚙ Funcionamento
@@ -13,6 +13,8 @@ Uma aplicação de gerenciamento de estoque e visitas.
 - Visitas
   - Add registro de visitas.
   - Remove registro de visitas.
+
+<pre><a href="https://vleonecezar.github.io/controle-estoque-visita/">Clique aqui e veja em funcionamento</a></pre>
 
 ## 🛠 Tecnologias
 
