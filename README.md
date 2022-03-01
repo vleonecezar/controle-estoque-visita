@@ -1,40 +1,35 @@
 # Controle de Estoque e Visitas 🧰
 
-<div style="text-align: justify;">
-Aplicação de controle de estoque e visitas.
+<div align="center">
+  <a href="#-sobre">Sobre</a> | <a href="#-tecnologias">Tecnologias</a> | <a href="#-teste-a-aplicação">Teste a Aplicação</a> 
 </div>
+<br>
 
-## ⚙ Funcionamento
-
-- Estoque
-  - Add itens no estoque.
-  - Remove Itens do estoque.
-  - Edita a quantidade de item no estoque.
-- Visitas
-  - Add registro de visitas.
-  - Remove registro de visitas.
-
-<pre><a href="https://vleonecezar.github.io/controle-estoque-visita/">Clique aqui e veja em funcionamento</a></pre>
-
-## 🛠 Tecnologias
-
-- <code>HTML</code>
-- <code>CSS</code>
-- <code>JavaScript</code>
-
-## 💻 Telas 📱
 <div align="center">
   
-### Estoque
-  
-![estoque](https://user-images.githubusercontent.com/76831929/155433749-6ce20be1-8d26-4d00-a566-2cb4e88862de.jpg)
-![cadastro_estoque](https://user-images.githubusercontent.com/76831929/155433769-a3bb4faa-a1e0-4668-85ea-b073b12fee26.jpg)
-![gerenciar_estoque](https://user-images.githubusercontent.com/76831929/155433774-d69444b7-3379-45db-9405-45a2b001f89c.jpg)
-  
-### Visitas  
-  
-![visitas](https://user-images.githubusercontent.com/76831929/155433779-bfc9564c-942d-4955-ac32-261fab266483.jpg)
-![cadastro_visitas](https://user-images.githubusercontent.com/76831929/155433783-1c5fddf5-7b68-447c-a33c-4b79beb726c3.jpg)
+![Web_capture_28-2-2022_224440_techsini com-removebg-preview](https://user-images.githubusercontent.com/76831929/156089188-1848ae46-28d5-4bc9-8143-f14e1ffd4fec.png)
 
 </div>
 
+# 👨🏻‍🏫 Sobre
+Aplicação onde você controla informações de estoque e gerencia marcação de visitas.
+
+# 🤳🏻 Funcionalidades
+
+- Cadastra item no estoque.
+- Remove item do estoque.
+- Altera quantidade de itens no estoque.
+- Cadastra marcação de visita.
+- Remove visita marcada.
+
+# 🚀 Tecnologias
+
+- <a href="https://www.w3schools.com/js/default.asp" target="_blank">JavaScript</a> <br>
+
+# 👨🏻‍💻 Teste a aplicação
+Você pode testar a aplicação <a href="https://vleonecezar.github.io/controle-estoque-visita/" target="_blank">clicando aqui</a>. <br>
+
+  ### Clone o repositório
+```
+  git clone https://github.com/vleonecezar/controle-estoque-visita.git
+```
