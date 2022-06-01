@@ -1,35 +1,54 @@
-# Controle de Estoque e Visitas 🧰
-
-<div align="center">
-  <a href="#-sobre">Sobre</a> | <a href="#-tecnologias">Tecnologias</a> | <a href="#-teste-a-aplicação">Teste a Aplicação</a> 
-</div>
-<br>
-
 <div align="center">
   
-![Web_capture_28-2-2022_224440_techsini com-removebg-preview](https://user-images.githubusercontent.com/76831929/156089188-1848ae46-28d5-4bc9-8143-f14e1ffd4fec.png)
+![logo](https://user-images.githubusercontent.com/76831929/171311555-e4b550c0-d1c5-4819-96eb-ee89cb945531.png)
+  
+# Controle de Estoque e Visitas
+
+#### Aplicação Que Gerencia Estoque e Marcação de Visitas.
+
+[Funcionalidades](#funcionalidades) • [Tecnologias](#tecnologias) • [Como Usar](#como-usar)
+  
+![31872e85-f33e-4b56-a013-5f0f7f860146](https://user-images.githubusercontent.com/76831929/171313261-98c7364e-f05b-4cc4-8b1f-07b3aff45205.png)
+
+### [Teste a Aplicação](https://vleonecezar.github.io/controle-estoque-visita/)
 
 </div>
 
-# 👨🏻‍🏫 Sobre
-Aplicação onde você controla informações de estoque e gerencia marcação de visitas.
+## Funcionalidades
 
-# 🤳🏻 Funcionalidades
+- Navegue entre as telas de estoque e visitas.
+- Pesquise um item existente pelo nome.
+- Cadastre e delete items e visitas.
+- Gerencie quantidade de items cadastrados no estoque.
 
-- Cadastra item no estoque.
-- Remove item do estoque.
-- Altera quantidade de itens no estoque.
-- Cadastra marcação de visita.
-- Remove visita marcada.
+## Tecnologias
 
-# 🚀 Tecnologias
+- [JavaScript](https://www.w3schools.com/js/default.asp)
 
-- <a href="https://www.w3schools.com/js/default.asp" target="_blank">JavaScript</a> <br>
+## Como Usar
 
-# 👨🏻‍💻 Teste a aplicação
-Você pode testar a aplicação <a href="https://vleonecezar.github.io/controle-estoque-visita/" target="_blank">clicando aqui</a>. <br>
+> Para clonar e rodar essa aplicação, você vai precisar do Git instalado em seu computador.
 
-  ### Clone o repositório
+#### Clone o repositório
+
 ```
   git clone https://github.com/vleonecezar/controle-estoque-visita.git
 ```
+
+#### Abra o repositório
+
+```
+  cd controle-estoque-visita
+```
+
+#### Rode a aplicação
+
+```
+  Abra o index.html em seu navegador
+```
+
+<hr />
+<div align="center">
+<a href="https://www.linkedin.com/in/vitor-leone-cezar/" target="_blank"><img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
+<a href="https://instagram.com/vitorleonevt" target="_blank"><img src="https://img.shields.io/badge/-Instagram-%23E4405F?style=for-the-badge&logo=instagram&logoColor=white" target="_blank"></a>
+</div>
